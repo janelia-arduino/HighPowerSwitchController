@@ -17,13 +17,12 @@ namespace high_power_switch_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{INTERRUPT_COUNT_MAX=2};
+enum{INTERRUPT_COUNT_MAX=1};
 
-enum {CHANNEL_COUNT=1};
+enum {CHANNEL_COUNT=8};
 
-extern const size_t enable_pins[CHANNEL_COUNT];
-extern const size_t step_pins[CHANNEL_COUNT];
-extern const size_t dir_pins[CHANNEL_COUNT];
+extern const size_t signal_pins[CHANNEL_COUNT];
+extern const size_t fault_pins[CHANNEL_COUNT];
 
 // Interrupts
 // extern ConstantString bnc_b_interrupt_name;
@@ -33,13 +32,6 @@ extern const size_t dir_pins[CHANNEL_COUNT];
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
-extern const ConstantString * const enable_polarity_default[CHANNEL_COUNT];
-
-extern const ConstantString * const step_polarity_default[CHANNEL_COUNT];
-
-extern const ConstantString * const dir_polarity_default[CHANNEL_COUNT];
-
-extern const ConstantString * const mode_default[CHANNEL_COUNT];
 
 // Parameters
 

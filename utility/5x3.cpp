@@ -17,41 +17,21 @@ namespace constants
 const modular_server::HardwareInfo hardware_info =
   {
     .name_ptr=&hardware_name,
-    .part_number=0,
+    .part_number=1210,
     .version_major=1,
     .version_minor=0,
   };
 
-const size_t enable_pins[CHANNEL_COUNT] = {49};
-const size_t step_pins[CHANNEL_COUNT] = {53};
-const size_t dir_pins[CHANNEL_COUNT] = {51};
+const size_t enable_pin = 52;
 
-size_t step_half_period_us_max = 20;
+const size_t signal_pins[CHANNEL_COUNT] = {2,6,29,30,35,36,22,23};
+const size_t fault_pins[CHANNEL_COUNT] = {55,54,40,41,42,50,49,16};
 
 // Interrupts
 
 // Units
 
 // Properties
-const ConstantString * const enable_polarity_default[CHANNEL_COUNT] =
-  {
-    &polarity_high,
-  };
-
-const ConstantString * const step_polarity_default[CHANNEL_COUNT] =
-  {
-    &polarity_high,
-  };
-
-const ConstantString * const dir_polarity_default[CHANNEL_COUNT] =
-  {
-    &polarity_high,
-  };
-
-const ConstantString * const mode_default[CHANNEL_COUNT] =
-  {
-    &mode_position,
-  };
 
 // Parameters
 
