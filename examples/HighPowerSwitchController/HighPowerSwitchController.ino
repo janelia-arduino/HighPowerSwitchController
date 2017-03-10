@@ -13,6 +13,8 @@
 #include "IndexedContainer.h"
 #include "FunctorCallbacks.h"
 
+#include "EventController.h"
+
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
 #include "HighPowerSwitchController.h"

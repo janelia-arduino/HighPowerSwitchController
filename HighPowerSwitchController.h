@@ -22,6 +22,8 @@
 #include "IndexedContainer.h"
 #include "FunctorCallbacks.h"
 
+#include "EventController.h"
+
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
 
@@ -56,6 +58,27 @@ public:
   uint32_t getChannelsOn();
   size_t getChannelCount();
 
+  void saveState(const size_t state);
+  void recallState(const size_t state);
+
+  int addPwm(const uint32_t channels,
+             const long delay,
+             const long period,
+             const long on_duration,
+             const long count);
+  int startPwm(const uint32_t channels,
+               const long delay,
+               const long period,
+               const long on_duration);
+  void stopPwm(const int pwm_index);
+  void stopAllPwm();
+
+  uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
+
+  // Handlers
+  virtual void startPwmHandler(int index);
+  virtual void stopPwmHandler(int index);
+
 private:
   modular_server::Interrupt interrupts_[high_power_switch_controller::constants::INTERRUPT_COUNT_MAX];
 
@@ -68,7 +91,11 @@ private:
   uint32_t channels_;
 
   long powerToAnalogWriteValue(const long power);
-  uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
+
+  EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
+
+  IndexedContainer<high_power_switch_controller::constants::PulseInfo,
+                   high_power_switch_controller::constants::INDEXED_PULSES_COUNT_MAX> indexed_pulses_;
 
   // Handlers
   void setChannelPowerHandler(const size_t channel);
@@ -91,6 +118,14 @@ private:
   void getChannelsOnHandler();
   void getChannelsOffHandler();
   void getChannelCountHandler();
+  void saveStateHandler();
+  void recallStateHandler();
+  void addPwmHandler();
+  void startPwmHandler();
+  void stopPwmHandler();
+  void stopAllPwmHandler();
+  void setChannelsOnHandler(int index);
+  void setChannelsOffHandler(int index);
 
 };
 

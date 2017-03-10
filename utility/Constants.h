@@ -10,6 +10,8 @@
 #include "ConstantVariable.h"
 #include "ModularServer.h"
 
+#include "EventController.h"
+
 
 namespace high_power_switch_controller
 {
@@ -36,6 +38,14 @@ extern const long analog_write_max;
 extern const long channel_pwm_min;
 extern const long channel_pwm_max;
 
+extern const int bad_index;
+
+struct PulseInfo
+{
+  uint32_t channels;
+  EventIdPair event_id_pair;
+};
+
 // Interrupts
 
 // Units
@@ -45,6 +55,8 @@ extern const long channel_pwm_max;
 extern ConstantString channel_power_property_name;
 extern const long channel_power_min;
 extern const long channel_power_max;
+
+extern ConstantString states_property_name;
 
 // Parameters
 extern ConstantString channel_parameter_name;
@@ -71,6 +83,12 @@ extern ConstantString set_channels_off_all_others_on_function_name;
 extern ConstantString get_channels_on_function_name;
 extern ConstantString get_channels_off_function_name;
 extern ConstantString get_channel_count_function_name;
+extern ConstantString save_state_function_name;
+extern ConstantString recall_state_function_name;
+extern ConstantString add_pwm_function_name;
+extern ConstantString start_pwm_function_name;
+extern ConstantString stop_pwm_function_name;
+extern ConstantString stop_all_pwm_function_name;
 
 // Callbacks
 

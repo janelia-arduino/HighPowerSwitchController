@@ -21,6 +21,11 @@ enum{INTERRUPT_COUNT_MAX=1};
 
 enum {CHANNEL_COUNT=8};
 
+enum {STATE_COUNT=16};
+
+enum{EVENT_COUNT_MAX=16};
+enum{INDEXED_PULSES_COUNT_MAX=8};
+
 extern const size_t signal_pins[CHANNEL_COUNT];
 extern const size_t fault_pins[CHANNEL_COUNT];
 
@@ -33,6 +38,8 @@ extern const size_t fault_pins[CHANNEL_COUNT];
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 extern const long channel_power_default[CHANNEL_COUNT];
+
+extern const long states_array_default[STATE_COUNT];
 
 // Parameters
 

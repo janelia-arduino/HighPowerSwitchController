@@ -34,6 +34,8 @@ const long analog_write_max = 255;
 const long channel_pwm_min = 0;
 const long channel_pwm_max = 24;
 
+const int bad_index = -1;
+
 // Interrupts
 
 // Units
@@ -68,6 +70,12 @@ CONSTANT_STRING(set_channels_off_all_others_on_function_name,"setChannelsOffAllO
 CONSTANT_STRING(get_channels_on_function_name,"getChannelsOn");
 CONSTANT_STRING(get_channels_off_function_name,"getChannelsOff");
 CONSTANT_STRING(get_channel_count_function_name,"getChannelCount");
+CONSTANT_STRING(save_state_function_name,"saveState");
+CONSTANT_STRING(recall_state_function_name,"recallState");
+CONSTANT_STRING(add_pwm_function_name,"addPwm");
+CONSTANT_STRING(start_pwm_function_name,"startPwm");
+CONSTANT_STRING(stop_pwm_function_name,"stopPwm");
+CONSTANT_STRING(stop_all_pwm_function_name,"stopAllPwm");
 
 // Callbacks
 
