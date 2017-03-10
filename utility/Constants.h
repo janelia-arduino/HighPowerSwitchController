@@ -17,8 +17,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
-enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=5};
+enum{PARAMETER_COUNT_MAX=2};
+enum{FUNCTION_COUNT_MAX=19};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern ConstantString device_name;
@@ -31,15 +31,25 @@ extern const modular_server::HardwareInfo hardware_info;
 
 extern const size_t enable_pin;
 
+extern const long analog_write_min;
+extern const long analog_write_max;
+extern const long channel_pwm_min;
+extern const long channel_pwm_max;
+
 // Interrupts
 
 // Units
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
+extern ConstantString channel_power_property_name;
+extern const long channel_power_min;
+extern const long channel_power_max;
 
 // Parameters
 extern ConstantString channel_parameter_name;
+
+extern ConstantString channels_parameter_name;
 
 // Functions
 extern ConstantString enable_all_function_name;
@@ -47,6 +57,20 @@ extern ConstantString disable_all_function_name;
 extern ConstantString enabled_function_name;
 extern ConstantString set_channel_on_function_name;
 extern ConstantString set_channel_off_function_name;
+extern ConstantString set_channels_on_function_name;
+extern ConstantString set_channels_off_function_name;
+extern ConstantString toggle_channel_function_name;
+extern ConstantString toggle_channels_function_name;
+extern ConstantString toggle_all_channels_function_name;
+extern ConstantString set_all_channels_on_function_name;
+extern ConstantString set_all_channels_off_function_name;
+extern ConstantString set_channel_on_all_others_off_function_name;
+extern ConstantString set_channel_off_all_others_on_function_name;
+extern ConstantString set_channels_on_all_others_off_function_name;
+extern ConstantString set_channels_off_all_others_on_function_name;
+extern ConstantString get_channels_on_function_name;
+extern ConstantString get_channels_off_function_name;
+extern ConstantString get_channel_count_function_name;
 
 // Callbacks
 

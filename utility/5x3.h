@@ -32,6 +32,7 @@ extern const size_t fault_pins[CHANNEL_COUNT];
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
+extern const long channel_power_default[CHANNEL_COUNT];
 
 // Parameters
 

@@ -38,10 +38,23 @@ public:
   void enableAll();
   void disableAll();
   bool enabled();
+
+  void setChannels(const uint32_t channels);
   void setChannelOn(const size_t channel);
   void setChannelOff(const size_t channel);
+  void setChannelsOn(const uint32_t channels);
+  void setChannelsOff(const uint32_t channels);
+  void toggleChannel(const size_t channel);
+  void toggleChannels(const uint32_t channels);
+  void toggleAllChannels();
   void setAllChannelsOn();
   void setAllChannelsOff();
+  void setChannelOnAllOthersOff(const size_t channel);
+  void setChannelOffAllOthersOn(const size_t channel);
+  void setChannelsOnAllOthersOff(const uint32_t channels);
+  void setChannelsOffAllOthersOn(const uint32_t channels);
+  uint32_t getChannelsOn();
+  size_t getChannelCount();
 
 private:
   modular_server::Interrupt interrupts_[high_power_switch_controller::constants::INTERRUPT_COUNT_MAX];
@@ -52,13 +65,32 @@ private:
   modular_server::Callback callbacks_[high_power_switch_controller::constants::CALLBACK_COUNT_MAX];
 
   bool enabled_;
+  uint32_t channels_;
+
+  long powerToAnalogWriteValue(const long power);
+  uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
 
   // Handlers
+  void setChannelPowerHandler(const size_t channel);
   void enableAllHandler();
   void disableAllHandler();
   void enabledHandler();
   void setChannelOnHandler();
   void setChannelOffHandler();
+  void setChannelsOnHandler();
+  void setChannelsOffHandler();
+  void toggleChannelHandler();
+  void toggleChannelsHandler();
+  void toggleAllChannelsHandler();
+  void setAllChannelsOnHandler();
+  void setAllChannelsOffHandler();
+  void setChannelOnAllOthersOffHandler();
+  void setChannelOffAllOthersOnHandler();
+  void setChannelsOnAllOthersOffHandler();
+  void setChannelsOffAllOthersOnHandler();
+  void getChannelsOnHandler();
+  void getChannelsOffHandler();
+  void getChannelCountHandler();
 
 };
 

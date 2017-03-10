@@ -24,14 +24,46 @@ const modular_server::HardwareInfo hardware_info =
 
 const size_t enable_pin = 52;
 
-const size_t signal_pins[CHANNEL_COUNT] = {2,6,29,30,35,36,22,23};
-const size_t fault_pins[CHANNEL_COUNT] = {55,54,40,41,42,50,49,16};
+const size_t signal_pins[CHANNEL_COUNT] =
+  {
+    2,
+    6,
+    29,
+    30,
+    35,
+    36,
+    22,
+    23
+  };
+
+const size_t fault_pins[CHANNEL_COUNT] =
+  {
+    55,
+    54,
+    40,
+    41,
+    42,
+    50,
+    49,
+    16
+  };
 
 // Interrupts
 
 // Units
 
 // Properties
+const long channel_power_default[CHANNEL_COUNT] =
+  {
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+  };
 
 // Parameters
 
