@@ -78,8 +78,8 @@ public:
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
 
   // Handlers
-  // virtual void startPwmHandler(int index);
-  // virtual void stopPwmHandler(int index);
+  virtual void startPwmHandler(int index);
+  virtual void stopPwmHandler(int index);
 
 private:
   modular_server::Interrupt interrupts_[high_power_switch_controller::constants::INTERRUPT_COUNT_MAX];

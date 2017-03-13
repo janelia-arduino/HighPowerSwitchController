@@ -21,10 +21,8 @@ enum{INTERRUPT_COUNT_MAX=1};
 
 enum {CHANNEL_COUNT=8};
 
-enum {STATE_COUNT=16};
-
-enum{EVENT_COUNT_MAX=16};
-enum{INDEXED_PULSES_COUNT_MAX=8};
+enum{EVENT_COUNT_MAX=32};
+enum{INDEXED_PULSES_COUNT_MAX=16};
 
 extern const size_t signal_pins[CHANNEL_COUNT];
 extern const size_t fault_pins[CHANNEL_COUNT];

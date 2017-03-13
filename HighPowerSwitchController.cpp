@@ -24,6 +24,9 @@ void HighPowerSwitchController::setup()
   // Parent Setup
   ModularDeviceBase::setup();
 
+  // Event Controller Setup
+  event_controller_.setup();
+
   // Pin Setup
   pinMode(constants::enable_pin,OUTPUT);
   disableAll();
@@ -72,6 +75,25 @@ void HighPowerSwitchController::setup()
   modular_server::Parameter & powers_parameter = modular_server_.createParameter(constants::powers_parameter_name);
   powers_parameter.setRange(constants::power_min,constants::power_max);
   powers_parameter.setArrayLengthRange(constants::CHANNEL_COUNT,constants::CHANNEL_COUNT);
+
+  modular_server::Parameter & delay_parameter = modular_server_.createParameter(constants::delay_parameter_name);
+  delay_parameter.setRange(constants::delay_min,constants::delay_max);
+  delay_parameter.setUnits(constants::ms_unit);
+
+  modular_server::Parameter & period_parameter = modular_server_.createParameter(constants::period_parameter_name);
+  period_parameter.setRange(constants::period_min,constants::period_max);
+  period_parameter.setUnits(constants::ms_unit);
+
+  modular_server::Parameter & on_duration_parameter = modular_server_.createParameter(constants::on_duration_parameter_name);
+  on_duration_parameter.setRange(constants::on_duration_min,constants::on_duration_max);
+  on_duration_parameter.setUnits(constants::ms_unit);
+
+  modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
+  count_parameter.setRange(constants::count_min,constants::count_max);
+  count_parameter.setUnits(constants::ms_unit);
+
+  modular_server::Parameter & pwm_index_parameter = modular_server_.createParameter(constants::pwm_index_parameter_name);
+  pwm_index_parameter.setRange(0,constants::INDEXED_PULSES_COUNT_MAX-1);
 
   // Functions
   modular_server::Function & enable_all_function = modular_server_.createFunction(constants::enable_all_function_name);
@@ -172,6 +194,30 @@ void HighPowerSwitchController::setup()
 
   modular_server::Function & get_channel_count_function = modular_server_.createFunction(constants::get_channel_count_function_name);
   get_channel_count_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelCountHandler));
+
+  modular_server::Function & add_pwm_function = modular_server_.createFunction(constants::add_pwm_function_name);
+  add_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::addPwmHandler));
+  add_pwm_function.addParameter(channels_parameter);
+  add_pwm_function.addParameter(delay_parameter);
+  add_pwm_function.addParameter(period_parameter);
+  add_pwm_function.addParameter(on_duration_parameter);
+  add_pwm_function.addParameter(count_parameter);
+  add_pwm_function.setReturnTypeLong();
+
+  modular_server::Function & start_pwm_function = modular_server_.createFunction(constants::start_pwm_function_name);
+  start_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::startPwmHandler));
+  start_pwm_function.addParameter(channels_parameter);
+  start_pwm_function.addParameter(delay_parameter);
+  start_pwm_function.addParameter(period_parameter);
+  start_pwm_function.addParameter(on_duration_parameter);
+  start_pwm_function.setReturnTypeLong();
+
+  modular_server::Function & stop_pwm_function = modular_server_.createFunction(constants::stop_pwm_function_name);
+  stop_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::stopPwmHandler));
+  stop_pwm_function.addParameter(pwm_index_parameter);
+
+  modular_server::Function & stop_all_pwm_function = modular_server_.createFunction(constants::stop_all_pwm_function_name);
+  stop_all_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::stopAllPwmHandler));
 
   // Callbacks
 
@@ -444,6 +490,79 @@ size_t HighPowerSwitchController::getChannelCount()
   return constants::CHANNEL_COUNT;
 }
 
+int HighPowerSwitchController::addPwm(const uint32_t channels,
+                                      const long delay,
+                                      const long period,
+                                      const long on_duration,
+                                      const long count)
+{
+  if (indexed_pulses_.full())
+  {
+    return constants::bad_index;
+  }
+  high_power_switch_controller::constants::PulseInfo pulse_info;
+  pulse_info.channels = channels;
+  int index = indexed_pulses_.add(pulse_info);
+  EventIdPair event_id_pair = event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOnHandler),
+                                                                 makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
+                                                                 delay,
+                                                                 period,
+                                                                 on_duration,
+                                                                 count,
+                                                                 index);
+  event_controller_.addStartFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startPwmHandler));
+  event_controller_.addStopFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopPwmHandler));
+  indexed_pulses_[index].event_id_pair = event_id_pair;
+  event_controller_.enable(event_id_pair);
+  return index;
+}
+
+int HighPowerSwitchController::startPwm(const uint32_t channels,
+                                        const long delay,
+                                        const long period,
+                                        const long on_duration)
+{
+  if (indexed_pulses_.full())
+  {
+    return -1;
+  }
+  high_power_switch_controller::constants::PulseInfo pulse_info;
+  pulse_info.channels = channels;
+  int index = indexed_pulses_.add(pulse_info);
+  EventIdPair event_id_pair = event_controller_.addInfinitePwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOnHandler),
+                                                                         makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
+                                                                         delay,
+                                                                         period,
+                                                                         on_duration,
+                                                                         index);
+  event_controller_.addStartFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startPwmHandler));
+  event_controller_.addStopFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopPwmHandler));
+  indexed_pulses_[index].event_id_pair = event_id_pair;
+  event_controller_.enable(event_id_pair);
+  return index;
+}
+
+void HighPowerSwitchController::stopPwm(const int pwm_index)
+{
+  if (pwm_index < 0)
+  {
+    return;
+  }
+  if (indexed_pulses_.indexHasValue(pwm_index))
+  {
+    constants::PulseInfo pulse_info = indexed_pulses_[pwm_index];
+    event_controller_.remove(pulse_info.event_id_pair);
+  }
+}
+
+void HighPowerSwitchController::stopAllPwm()
+{
+  for (size_t i=0; i<constants::INDEXED_PULSES_COUNT_MAX; ++i)
+  {
+    stopPwm(i);
+  }
+}
+
 uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & channels_array)
 {
   uint32_t channels = 0;
@@ -523,6 +642,17 @@ void HighPowerSwitchController::updateAllChannels()
 // modular_server_.property(property_name).setValue(value) value type must match the property default type
 // modular_server_.property(property_name).getElementValue(value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(value) value type must match the property array element default type
+
+void HighPowerSwitchController::startPwmHandler(int index)
+{
+}
+
+void HighPowerSwitchController::stopPwmHandler(int index)
+{
+  uint32_t & channels = indexed_pulses_[index].channels;
+  setChannelsOff(channels);
+  indexed_pulses_.remove(index);
+}
 
 void HighPowerSwitchController::setPowerMaxHandler(const size_t channel)
 {
@@ -765,4 +895,74 @@ void HighPowerSwitchController::getChannelCountHandler()
 {
   size_t channel_count = getChannelCount();
   modular_server_.response().returnResult(channel_count);
+}
+
+void HighPowerSwitchController::addPwmHandler()
+{
+  ArduinoJson::JsonArray * channels_array_ptr;
+  modular_server_.parameter(constants::channels_parameter_name).getValue(channels_array_ptr);
+  long delay;
+  modular_server_.parameter(constants::delay_parameter_name).getValue(delay);
+  long period;
+  modular_server_.parameter(constants::period_parameter_name).getValue(period);
+  long on_duration;
+  modular_server_.parameter(constants::on_duration_parameter_name).getValue(on_duration);
+  long count;
+  modular_server_.parameter(constants::count_parameter_name).getValue(count);
+  const uint32_t channels = arrayToChannels(*channels_array_ptr);
+  int index = addPwm(channels,delay,period,on_duration,count);
+  if (index >= 0)
+  {
+    modular_server_.response().returnResult(index);
+  }
+  else
+  {
+    modular_server_.response().returnError(constants::pwm_error);
+  }
+}
+
+void HighPowerSwitchController::startPwmHandler()
+{
+  ArduinoJson::JsonArray * channels_array_ptr;
+  modular_server_.parameter(constants::channels_parameter_name).getValue(channels_array_ptr);
+  long delay;
+  modular_server_.parameter(constants::delay_parameter_name).getValue(delay);
+  long period;
+  modular_server_.parameter(constants::period_parameter_name).getValue(period);
+  long on_duration;
+  modular_server_.parameter(constants::on_duration_parameter_name).getValue(on_duration);
+  const uint32_t channels = arrayToChannels(*channels_array_ptr);
+  int index = startPwm(channels,delay,period,on_duration);
+  if (index >= 0)
+  {
+    modular_server_.response().returnResult(index);
+  }
+  else
+  {
+    modular_server_.response().returnError(constants::pwm_error);
+  }
+}
+
+void HighPowerSwitchController::stopPwmHandler()
+{
+  int pwm_index;
+  modular_server_.parameter(constants::pwm_index_parameter_name).getValue(pwm_index);
+  stopPwm(pwm_index);
+}
+
+void HighPowerSwitchController::stopAllPwmHandler()
+{
+  stopAllPwm();
+}
+
+void HighPowerSwitchController::setChannelsOnHandler(int index)
+{
+  uint32_t & channels = indexed_pulses_[index].channels;
+  setChannelsOn(channels);
+}
+
+void HighPowerSwitchController::setChannelsOffHandler(int index)
+{
+  uint32_t & channels = indexed_pulses_[index].channels;
+  setChannelsOff(channels);
 }

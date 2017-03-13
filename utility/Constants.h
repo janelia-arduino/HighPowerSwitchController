@@ -19,7 +19,7 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
-enum{PARAMETER_COUNT_MAX=4};
+enum{PARAMETER_COUNT_MAX=9};
 enum{FUNCTION_COUNT_MAX=29};
 enum{CALLBACK_COUNT_MAX=1};
 
@@ -49,6 +49,7 @@ struct PulseInfo
 // Interrupts
 
 // Units
+extern ConstantString ms_unit;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
@@ -64,6 +65,24 @@ extern const long power_min;
 extern const long power_max;
 
 extern ConstantString powers_parameter_name;
+
+extern ConstantString delay_parameter_name;
+extern const long delay_min;
+extern const long delay_max;
+
+extern ConstantString period_parameter_name;
+extern const long period_min;
+extern const long period_max;
+
+extern ConstantString on_duration_parameter_name;
+extern const long on_duration_min;
+extern const long on_duration_max;
+
+extern ConstantString count_parameter_name;
+extern const long count_min;
+extern const long count_max;
+
+extern ConstantString pwm_index_parameter_name;
 
 // Functions
 extern ConstantString enable_all_function_name;
@@ -99,6 +118,7 @@ extern ConstantString stop_all_pwm_function_name;
 // Callbacks
 
 // Errors
+extern ConstantString pwm_error;
 }
 }
 #include "5x3.h"
