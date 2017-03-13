@@ -41,6 +41,10 @@ public:
   void disableAll();
   bool enabled();
 
+  long setPowerWhenOn(const size_t channel, const long power);
+  long getPowerWhenOn(const size_t channel);
+  long getPower(const size_t channel);
+
   void setChannels(const uint32_t channels);
   void setChannelOn(const size_t channel);
   void setChannelOff(const size_t channel);
@@ -55,11 +59,9 @@ public:
   void setChannelOffAllOthersOn(const size_t channel);
   void setChannelsOnAllOthersOff(const uint32_t channels);
   void setChannelsOffAllOthersOn(const uint32_t channels);
+  bool channelIsOn(const size_t channel);
   uint32_t getChannelsOn();
   size_t getChannelCount();
-
-  void saveState(const size_t state);
-  void recallState(const size_t state);
 
   int addPwm(const uint32_t channels,
              const long delay,
@@ -99,11 +101,19 @@ private:
   IndexedContainer<high_power_switch_controller::constants::PulseInfo,
                    high_power_switch_controller::constants::INDEXED_PULSES_COUNT_MAX> indexed_pulses_;
 
+  void updateChannel(const size_t channel);
+  void updateAllChannels();
+
   // Handlers
   void setPowerMaxHandler(const size_t channel);
   void enableAllHandler();
   void disableAllHandler();
   void enabledHandler();
+  void setPowerWhenOnHandler();
+  void setPowersWhenOnHandler();
+  void setAllPowersWhenOnHandler();
+  void getPowersWhenOnHandler();
+  void getPowersHandler();
   void setChannelOnHandler();
   void setChannelOffHandler();
   void setChannelsOnHandler();
@@ -117,11 +127,10 @@ private:
   void setChannelOffAllOthersOnHandler();
   void setChannelsOnAllOthersOffHandler();
   void setChannelsOffAllOthersOnHandler();
+  void channelIsOnHandler();
   void getChannelsOnHandler();
   void getChannelsOffHandler();
   void getChannelCountHandler();
-  void saveStateHandler();
-  void recallStateHandler();
   void addPwmHandler();
   void startPwmHandler();
   void stopPwmHandler();

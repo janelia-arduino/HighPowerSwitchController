@@ -43,8 +43,6 @@ const int bad_index = -1;
 // Properties
 CONSTANT_STRING(power_max_property_name,"powerMax");
 
-CONSTANT_STRING(states_property_name,"states");
-
 // Parameters
 CONSTANT_STRING(channel_parameter_name,"channel");
 
@@ -60,6 +58,11 @@ CONSTANT_STRING(powers_parameter_name,"powers");
 CONSTANT_STRING(enable_all_function_name,"enableAll");
 CONSTANT_STRING(disable_all_function_name,"disableAll");
 CONSTANT_STRING(enabled_function_name,"enabled");
+CONSTANT_STRING(set_power_when_on_function_name,"setPowerWhenOn");
+CONSTANT_STRING(set_powers_when_on_function_name,"setPowersWhenOn");
+CONSTANT_STRING(set_all_powers_when_on_function_name,"setAllPowersWhenOn");
+CONSTANT_STRING(get_powers_when_on_function_name,"getPowersWhenOn");
+CONSTANT_STRING(get_powers_function_name,"getPowers");
 CONSTANT_STRING(set_channel_on_function_name,"setChannelOn");
 CONSTANT_STRING(set_channel_off_function_name,"setChannelOff");
 CONSTANT_STRING(set_channels_on_function_name,"setChannelsOn");
@@ -73,11 +76,10 @@ CONSTANT_STRING(set_channel_on_all_others_off_function_name,"setChannelOnAllOthe
 CONSTANT_STRING(set_channel_off_all_others_on_function_name,"setChannelOffAllOthersOn");
 CONSTANT_STRING(set_channels_on_all_others_off_function_name,"setChannelsOnAllOthersOff");
 CONSTANT_STRING(set_channels_off_all_others_on_function_name,"setChannelsOffAllOthersOn");
+CONSTANT_STRING(channel_is_on_function_name,"channelIsOn");
 CONSTANT_STRING(get_channels_on_function_name,"getChannelsOn");
 CONSTANT_STRING(get_channels_off_function_name,"getChannelsOff");
 CONSTANT_STRING(get_channel_count_function_name,"getChannelCount");
-CONSTANT_STRING(save_state_function_name,"saveState");
-CONSTANT_STRING(recall_state_function_name,"recallState");
 CONSTANT_STRING(add_pwm_function_name,"addPwm");
 CONSTANT_STRING(start_pwm_function_name,"startPwm");
 CONSTANT_STRING(stop_pwm_function_name,"stopPwm");

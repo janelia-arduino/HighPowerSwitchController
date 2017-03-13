@@ -56,8 +56,6 @@ void HighPowerSwitchController::setup()
   power_max_property.setRange(constants::power_min,constants::power_max);
   power_max_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&HighPowerSwitchController::setPowerMaxHandler));
 
-  modular_server::Property & states_property = modular_server_.createProperty(constants::states_property_name,constants::states_array_default);
-
   setPowersToMax();
 
   // Parameters
@@ -67,6 +65,13 @@ void HighPowerSwitchController::setup()
   modular_server::Parameter & channels_parameter = modular_server_.createParameter(constants::channels_parameter_name);
   channels_parameter.setRange(0,constants::CHANNEL_COUNT-1);
   channels_parameter.setArrayLengthRange(1,constants::CHANNEL_COUNT);
+
+  modular_server::Parameter & power_parameter = modular_server_.createParameter(constants::power_parameter_name);
+  power_parameter.setRange(constants::power_min,constants::power_max);
+
+  modular_server::Parameter & powers_parameter = modular_server_.createParameter(constants::powers_parameter_name);
+  powers_parameter.setRange(constants::power_min,constants::power_max);
+  powers_parameter.setArrayLengthRange(constants::CHANNEL_COUNT,constants::CHANNEL_COUNT);
 
   // Functions
   modular_server::Function & enable_all_function = modular_server_.createFunction(constants::enable_all_function_name);
@@ -78,6 +83,30 @@ void HighPowerSwitchController::setup()
   modular_server::Function & enabled_function = modular_server_.createFunction(constants::enabled_function_name);
   enabled_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::enabledHandler));
   enabled_function.setReturnTypeBool();
+
+  modular_server::Function & set_power_when_on_function = modular_server_.createFunction(constants::set_power_when_on_function_name);
+  set_power_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setPowerWhenOnHandler));
+  set_power_when_on_function.addParameter(channel_parameter);
+  set_power_when_on_function.addParameter(power_parameter);
+  set_power_when_on_function.setReturnTypeLong();
+
+  modular_server::Function & set_powers_when_on_function = modular_server_.createFunction(constants::set_powers_when_on_function_name);
+  set_powers_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setPowersWhenOnHandler));
+  set_powers_when_on_function.addParameter(powers_parameter);
+  set_powers_when_on_function.setReturnTypeArray();
+
+  modular_server::Function & set_all_powers_when_on_function = modular_server_.createFunction(constants::set_all_powers_when_on_function_name);
+  set_all_powers_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setAllPowersWhenOnHandler));
+  set_all_powers_when_on_function.addParameter(power_parameter);
+  set_all_powers_when_on_function.setReturnTypeArray();
+
+  modular_server::Function & get_powers_when_on_function = modular_server_.createFunction(constants::get_powers_when_on_function_name);
+  get_powers_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPowersWhenOnHandler));
+  get_powers_when_on_function.setReturnTypeArray();
+
+  modular_server::Function & get_powers_function = modular_server_.createFunction(constants::get_powers_function_name);
+  get_powers_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPowersHandler));
+  get_powers_function.setReturnTypeArray();
 
   modular_server::Function & set_channel_on_function = modular_server_.createFunction(constants::set_channel_on_function_name);
   set_channel_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setChannelOnHandler));
@@ -128,6 +157,11 @@ void HighPowerSwitchController::setup()
   set_channels_off_all_others_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setChannelsOffAllOthersOnHandler));
   set_channels_off_all_others_on_function.addParameter(channels_parameter);
 
+  modular_server::Function & channel_is_on_function = modular_server_.createFunction(constants::channel_is_on_function_name);
+  channel_is_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::channelIsOnHandler));
+  channel_is_on_function.addParameter(channel_parameter);
+  channel_is_on_function.setReturnTypeBool();
+
   modular_server::Function & get_channels_on_function = modular_server_.createFunction(constants::get_channels_on_function_name);
   get_channels_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelsOnHandler));
   get_channels_on_function.setReturnTypeArray();
@@ -158,6 +192,61 @@ void HighPowerSwitchController::disableAll()
 bool HighPowerSwitchController::enabled()
 {
   return enabled_;
+}
+
+long HighPowerSwitchController::setPowerWhenOn(const size_t channel, const long power)
+{
+  long power_to_set = 0;
+  if (channel < constants::CHANNEL_COUNT)
+  {
+    power_to_set = power;
+    if (power_to_set < constants::power_min)
+    {
+      power_to_set = constants::power_min;
+    }
+    else
+    {
+      modular_server::Property & power_max_property = modular_server_.property(constants::power_max_property_name);
+      long power_max;
+      power_max_property.getElementValue(channel,power_max);
+      if (power_to_set > power_max)
+      {
+        power_to_set = power_max;
+      }
+    }
+    noInterrupts();
+    powers_[channel] = power_to_set;
+    interrupts();
+    updateChannel(channel);
+  }
+  return power_to_set;
+}
+
+long HighPowerSwitchController::getPowerWhenOn(const size_t channel)
+{
+  long power = constants::power_min;
+  if (channel < constants::CHANNEL_COUNT)
+  {
+    noInterrupts();
+    power = powers_[channel];
+    interrupts();
+  }
+  return power;
+}
+
+long HighPowerSwitchController::getPower(const size_t channel)
+{
+  long power = constants::power_min;
+  if (channel < constants::CHANNEL_COUNT)
+  {
+    if (channelIsOn(channel))
+    {
+      noInterrupts();
+      power = getPowerWhenOn(channel);
+      interrupts();
+    }
+  }
+  return power;
 }
 
 void HighPowerSwitchController::setChannels(const uint32_t channels)
@@ -328,6 +417,23 @@ void HighPowerSwitchController::setChannelsOffAllOthersOn(const uint32_t channel
   setChannels(channels_);
 }
 
+bool HighPowerSwitchController::channelIsOn(const size_t channel)
+{
+  bool channel_is_on = false;
+  if (channel < constants::CHANNEL_COUNT)
+  {
+    noInterrupts();
+    uint32_t channels = channels_;
+    interrupts();
+    uint32_t bit = 1;
+    if ((bit << channel) & channels)
+    {
+      channel_is_on = true;
+    }
+  }
+  return channel_is_on;
+}
+
 uint32_t HighPowerSwitchController::getChannelsOn()
 {
   return channels_;
@@ -336,6 +442,20 @@ uint32_t HighPowerSwitchController::getChannelsOn()
 size_t HighPowerSwitchController::getChannelCount()
 {
   return constants::CHANNEL_COUNT;
+}
+
+uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & channels_array)
+{
+  uint32_t channels = 0;
+  uint32_t bit = 1;
+  for (ArduinoJson::JsonArray::iterator channels_it=channels_array.begin();
+       channels_it != channels_array.end();
+       ++channels_it)
+  {
+    long channel = *channels_it;
+    channels |= bit << channel;
+  }
+  return channels;
 }
 
 long HighPowerSwitchController::powerToAnalogWriteValue(const long power)
@@ -366,18 +486,25 @@ void HighPowerSwitchController::setPowersToMax()
   }
 }
 
-uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & channels_array)
+void HighPowerSwitchController::updateChannel(const size_t channel)
 {
-  uint32_t channels = 0;
   uint32_t bit = 1;
-  for (ArduinoJson::JsonArray::iterator channels_it=channels_array.begin();
-       channels_it != channels_array.end();
-       ++channels_it)
+  bit = bit << channel;
+  noInterrupts();
+  uint32_t channels = channels_;
+  interrupts();
+  if ((bit << channel) & channels)
   {
-    long channel = *channels_it;
-    channels |= bit << channel;
+    setChannelOn(channel);
   }
-  return channels;
+}
+
+void HighPowerSwitchController::updateAllChannels()
+{
+  noInterrupts();
+  uint32_t channels = channels_;
+  interrupts();
+  setChannels(channels);
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -409,15 +536,7 @@ void HighPowerSwitchController::setPowerMaxHandler(const size_t channel)
   }
   interrupts();
 
-  uint32_t bit = 1;
-  bit = bit << channel;
-  noInterrupts();
-  uint32_t channels = channels_;
-  interrupts();
-  if ((bit << channel) & channels)
-  {
-    setChannelOn(channel);
-  }
+  updateChannel(channel);
 }
 
 void HighPowerSwitchController::enableAllHandler()
@@ -434,6 +553,81 @@ void HighPowerSwitchController::enabledHandler()
 {
   bool all_enabled = enabled();
   modular_server_.response().returnResult(all_enabled);
+}
+
+void HighPowerSwitchController::setPowerWhenOnHandler()
+{
+  size_t channel;
+  modular_server_.parameter(constants::channel_parameter_name).getValue(channel);
+  size_t power;
+  modular_server_.parameter(constants::power_parameter_name).getValue(power);
+  power = setPowerWhenOn(channel,power);
+  modular_server_.response().returnResult(power);
+}
+
+void HighPowerSwitchController::setPowersWhenOnHandler()
+{
+  ArduinoJson::JsonArray * powers_array_ptr;
+  modular_server_.parameter(constants::powers_parameter_name).getValue(powers_array_ptr);
+
+  modular_server_.response().writeResultKey();
+  modular_server_.response().beginArray();
+
+  size_t channel = 0;
+  for (ArduinoJson::JsonArray::iterator powers_it=powers_array_ptr->begin();
+       powers_it != powers_array_ptr->end();
+       ++powers_it)
+  {
+    long power = *powers_it;
+    power = setPowerWhenOn(channel,power);
+    modular_server_.response().write(power);
+    ++channel;
+  }
+
+  modular_server_.response().endArray();
+}
+
+void HighPowerSwitchController::setAllPowersWhenOnHandler()
+{
+  size_t power_to_set;
+  modular_server_.parameter(constants::power_parameter_name).getValue(power_to_set);
+
+  modular_server_.response().writeResultKey();
+  modular_server_.response().beginArray();
+
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    long power = setPowerWhenOn(channel,power_to_set);
+    modular_server_.response().write(power);
+  }
+
+  modular_server_.response().endArray();
+}
+
+void HighPowerSwitchController::getPowersWhenOnHandler()
+{
+  modular_server_.response().writeResultKey();
+  modular_server_.response().beginArray();
+  long power;
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    power = getPowerWhenOn(channel);
+    modular_server_.response().write(power);
+  }
+  modular_server_.response().endArray();
+}
+
+void HighPowerSwitchController::getPowersHandler()
+{
+  modular_server_.response().writeResultKey();
+  modular_server_.response().beginArray();
+  long power;
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    power = getPower(channel);
+    modular_server_.response().write(power);
+  }
+  modular_server_.response().endArray();
 }
 
 void HighPowerSwitchController::setChannelOnHandler()
@@ -498,14 +692,14 @@ void HighPowerSwitchController::setAllChannelsOffHandler()
 
 void HighPowerSwitchController::setChannelOnAllOthersOffHandler()
 {
-  int channel;
+  size_t channel;
   modular_server_.parameter(constants::channel_parameter_name).getValue(channel);
   setChannelOnAllOthersOff(channel);
 }
 
 void HighPowerSwitchController::setChannelOffAllOthersOnHandler()
 {
-  int channel;
+  size_t channel;
   modular_server_.parameter(constants::channel_parameter_name).getValue(channel);
   setChannelOffAllOthersOn(channel);
 }
@@ -524,6 +718,14 @@ void HighPowerSwitchController::setChannelsOffAllOthersOnHandler()
   modular_server_.parameter(constants::channels_parameter_name).getValue(channels_array_ptr);
   const uint32_t channels = arrayToChannels(*channels_array_ptr);
   setChannelsOffAllOthersOn(channels);
+}
+
+void HighPowerSwitchController::channelIsOnHandler()
+{
+  size_t channel;
+  modular_server_.parameter(constants::channel_parameter_name).getValue(channel);
+  bool channel_is_on = channelIsOn(channel);
+  modular_server_.response().returnResult(channel_is_on);
 }
 
 void HighPowerSwitchController::getChannelsOnHandler()
@@ -561,7 +763,6 @@ void HighPowerSwitchController::getChannelsOffHandler()
 
 void HighPowerSwitchController::getChannelCountHandler()
 {
-  int channel_count = getChannelCount();
+  size_t channel_count = getChannelCount();
   modular_server_.response().returnResult(channel_count);
 }
-

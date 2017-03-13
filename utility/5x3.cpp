@@ -65,26 +65,6 @@ const long power_max_default[CHANNEL_COUNT] =
     100,
   };
 
-const long states_array_default[STATE_COUNT] =
-  {
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-  };
-
 // Parameters
 
 // Functions

@@ -18,9 +18,9 @@ namespace high_power_switch_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=2};
+enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=4};
-enum{FUNCTION_COUNT_MAX=25};
+enum{FUNCTION_COUNT_MAX=29};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern ConstantString device_name;
@@ -54,8 +54,6 @@ struct PulseInfo
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
 extern ConstantString power_max_property_name;
 
-extern ConstantString states_property_name;
-
 // Parameters
 extern ConstantString channel_parameter_name;
 
@@ -71,6 +69,11 @@ extern ConstantString powers_parameter_name;
 extern ConstantString enable_all_function_name;
 extern ConstantString disable_all_function_name;
 extern ConstantString enabled_function_name;
+extern ConstantString set_power_when_on_function_name;
+extern ConstantString set_powers_when_on_function_name;
+extern ConstantString set_all_powers_when_on_function_name;
+extern ConstantString get_powers_when_on_function_name;
+extern ConstantString get_powers_function_name;
 extern ConstantString set_channel_on_function_name;
 extern ConstantString set_channel_off_function_name;
 extern ConstantString set_channels_on_function_name;
@@ -84,11 +87,10 @@ extern ConstantString set_channel_on_all_others_off_function_name;
 extern ConstantString set_channel_off_all_others_on_function_name;
 extern ConstantString set_channels_on_all_others_off_function_name;
 extern ConstantString set_channels_off_all_others_on_function_name;
+extern ConstantString channel_is_on_function_name;
 extern ConstantString get_channels_on_function_name;
 extern ConstantString get_channels_off_function_name;
 extern ConstantString get_channel_count_function_name;
-extern ConstantString save_state_function_name;
-extern ConstantString recall_state_function_name;
 extern ConstantString add_pwm_function_name;
 extern ConstantString start_pwm_function_name;
 extern ConstantString stop_pwm_function_name;
