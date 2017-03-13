@@ -39,6 +39,9 @@ void HighPowerSwitchController::setup()
   channels_ = 0;
   setAllChannelsOff();
 
+  // PWM Status
+  setAllPwmStatusFalse();
+
   // Interrupts
 
   // Set Device ID
@@ -626,6 +629,17 @@ void HighPowerSwitchController::updateAllChannels()
   setChannels(channels);
 }
 
+void HighPowerSwitchController::setAllPwmStatusFalse()
+{
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    for (size_t level=0; level<=constants::PWM_LEVEL_COUNT_MAX; ++level)
+    {
+      pwm_status_[channel][level] = false;
+    }
+  }
+}
+
 // Handlers must be non-blocking (avoid 'delay')
 //
 // modular_server_.parameter(parameter_name).getValue(value) value type must be either:
@@ -953,6 +967,10 @@ void HighPowerSwitchController::stopPwmHandler()
 void HighPowerSwitchController::stopAllPwmHandler()
 {
   stopAllPwm();
+}
+
+void HighPowerSwitchController::getPwmStatusHandler()
+{
 }
 
 void HighPowerSwitchController::setChannelsOnHandler(int index)

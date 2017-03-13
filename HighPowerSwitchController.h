@@ -92,17 +92,20 @@ private:
   bool enabled_;
   uint32_t channels_;
   long powers_[high_power_switch_controller::constants::CHANNEL_COUNT];
-
-  long powerToAnalogWriteValue(const long power);
-  void setPowersToMax();
+  bool pwm_status_[high_power_switch_controller::constants::CHANNEL_COUNT][constants::PWM_LEVEL_COUNT_MAX+1];
 
   EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
   IndexedContainer<high_power_switch_controller::constants::PulseInfo,
                    high_power_switch_controller::constants::INDEXED_PULSES_COUNT_MAX> indexed_pulses_;
 
+  long powerToAnalogWriteValue(const long power);
+  void setPowersToMax();
+
   void updateChannel(const size_t channel);
   void updateAllChannels();
+
+  void setAllPwmStatusFalse();
 
   // Handlers
   void setPowerMaxHandler(const size_t channel);
@@ -135,6 +138,7 @@ private:
   void startPwmHandler();
   void stopPwmHandler();
   void stopAllPwmHandler();
+  void getPwmStatusHandler();
   void setChannelsOnHandler(int index);
   void setChannelsOffHandler(int index);
 

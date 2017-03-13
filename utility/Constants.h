@@ -20,7 +20,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=9};
-enum{FUNCTION_COUNT_MAX=29};
+enum{FUNCTION_COUNT_MAX=30};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern ConstantString device_name;
@@ -114,6 +114,7 @@ extern ConstantString add_pwm_function_name;
 extern ConstantString start_pwm_function_name;
 extern ConstantString stop_pwm_function_name;
 extern ConstantString stop_all_pwm_function_name;
+extern ConstantString get_pwm_status_function_name;
 
 // Callbacks
 
