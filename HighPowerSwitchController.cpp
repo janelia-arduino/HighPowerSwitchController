@@ -52,9 +52,13 @@ void HighPowerSwitchController::setup()
                               functions_,
                               callbacks_);
   // Properties
-  modular_server::Property & channel_power_property = modular_server_.createProperty(constants::channel_power_property_name,constants::channel_power_default);
-  channel_power_property.setRange(constants::channel_power_min,constants::channel_power_max);
-  channel_power_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&HighPowerSwitchController::setChannelPowerHandler));
+  modular_server::Property & power_max_property = modular_server_.createProperty(constants::power_max_property_name,constants::power_max_default);
+  power_max_property.setRange(constants::power_min,constants::power_max);
+  power_max_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&HighPowerSwitchController::setPowerMaxHandler));
+
+  modular_server::Property & states_property = modular_server_.createProperty(constants::states_property_name,constants::states_array_default);
+
+  setPowersToMax();
 
   // Parameters
   modular_server::Parameter & channel_parameter = modular_server_.createParameter(constants::channel_parameter_name);
@@ -179,9 +183,9 @@ void HighPowerSwitchController::setChannelOn(const size_t channel)
     uint32_t bit = 1;
     bit = bit << channel;
 
-    long power;
-    modular_server::Property & channel_power_property = modular_server_.property(constants::channel_power_property_name);
-    channel_power_property.getElementValue(channel,power);
+    noInterrupts();
+    long power = powers_[channel];
+    interrupts();
     long analog_write_value = powerToAnalogWriteValue(power);
 
     noInterrupts();
@@ -337,8 +341,8 @@ size_t HighPowerSwitchController::getChannelCount()
 long HighPowerSwitchController::powerToAnalogWriteValue(const long power)
 {
   long pwm_value = map(power,
-                       constants::channel_power_min,
-                       constants::channel_power_max,
+                       constants::power_min,
+                       constants::power_max,
                        constants::channel_pwm_min,
                        constants::channel_pwm_max);
   long analog_write_value = map(pwm_value,
@@ -347,6 +351,19 @@ long HighPowerSwitchController::powerToAnalogWriteValue(const long power)
                                 constants::analog_write_min,
                                 constants::analog_write_max);
   return analog_write_value;
+}
+
+void HighPowerSwitchController::setPowersToMax()
+{
+  modular_server::Property & power_max_property = modular_server_.property(constants::power_max_property_name);
+  long power_max;
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    power_max_property.getElementValue(channel,power_max);
+    noInterrupts();
+    powers_[channel] = power_max;
+    interrupts();
+  }
 }
 
 uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & channels_array)
@@ -380,8 +397,18 @@ uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & cha
 // modular_server_.property(property_name).getElementValue(value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(value) value type must match the property array element default type
 
-void HighPowerSwitchController::setChannelPowerHandler(const size_t channel)
+void HighPowerSwitchController::setPowerMaxHandler(const size_t channel)
 {
+  modular_server::Property & power_max_property = modular_server_.property(constants::power_max_property_name);
+  long power_max;
+  power_max_property.getElementValue(channel,power_max);
+  noInterrupts();
+  if (powers_[channel] > power_max)
+  {
+    powers_[channel] = power_max;
+  }
+  interrupts();
+
   uint32_t bit = 1;
   bit = bit << channel;
   noInterrupts();

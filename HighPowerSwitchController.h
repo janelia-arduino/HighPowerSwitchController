@@ -76,8 +76,8 @@ public:
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
 
   // Handlers
-  virtual void startPwmHandler(int index);
-  virtual void stopPwmHandler(int index);
+  // virtual void startPwmHandler(int index);
+  // virtual void stopPwmHandler(int index);
 
 private:
   modular_server::Interrupt interrupts_[high_power_switch_controller::constants::INTERRUPT_COUNT_MAX];
@@ -89,8 +89,10 @@ private:
 
   bool enabled_;
   uint32_t channels_;
+  long powers_[high_power_switch_controller::constants::CHANNEL_COUNT];
 
   long powerToAnalogWriteValue(const long power);
+  void setPowersToMax();
 
   EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
@@ -98,7 +100,7 @@ private:
                    high_power_switch_controller::constants::INDEXED_PULSES_COUNT_MAX> indexed_pulses_;
 
   // Handlers
-  void setChannelPowerHandler(const size_t channel);
+  void setPowerMaxHandler(const size_t channel);
   void enableAllHandler();
   void disableAllHandler();
   void enabledHandler();

@@ -53,7 +53,7 @@ const size_t fault_pins[CHANNEL_COUNT] =
 // Units
 
 // Properties
-const long channel_power_default[CHANNEL_COUNT] =
+const long power_max_default[CHANNEL_COUNT] =
   {
     100,
     100,
@@ -63,6 +63,26 @@ const long channel_power_default[CHANNEL_COUNT] =
     100,
     100,
     100,
+  };
+
+const long states_array_default[STATE_COUNT] =
+  {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   };
 
 // Parameters

@@ -18,9 +18,9 @@ namespace high_power_switch_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=1};
-enum{PARAMETER_COUNT_MAX=2};
-enum{FUNCTION_COUNT_MAX=19};
+enum{PROPERTY_COUNT_MAX=2};
+enum{PARAMETER_COUNT_MAX=4};
+enum{FUNCTION_COUNT_MAX=25};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern ConstantString device_name;
@@ -52,9 +52,7 @@ struct PulseInfo
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
-extern ConstantString channel_power_property_name;
-extern const long channel_power_min;
-extern const long channel_power_max;
+extern ConstantString power_max_property_name;
 
 extern ConstantString states_property_name;
 
@@ -62,6 +60,12 @@ extern ConstantString states_property_name;
 extern ConstantString channel_parameter_name;
 
 extern ConstantString channels_parameter_name;
+
+extern ConstantString power_parameter_name;
+extern const long power_min;
+extern const long power_max;
+
+extern ConstantString powers_parameter_name;
 
 // Functions
 extern ConstantString enable_all_function_name;

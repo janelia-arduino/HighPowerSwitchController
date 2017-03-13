@@ -41,14 +41,20 @@ const int bad_index = -1;
 // Units
 
 // Properties
-CONSTANT_STRING(channel_power_property_name,"channelPower");
-const long channel_power_min = 0;
-const long channel_power_max = 100;
+CONSTANT_STRING(power_max_property_name,"powerMax");
+
+CONSTANT_STRING(states_property_name,"states");
 
 // Parameters
 CONSTANT_STRING(channel_parameter_name,"channel");
 
 CONSTANT_STRING(channels_parameter_name,"channels");
+
+CONSTANT_STRING(power_parameter_name,"power");
+const long power_min = 0;
+const long power_max = 100;
+
+CONSTANT_STRING(powers_parameter_name,"powers");
 
 // Functions
 CONSTANT_STRING(enable_all_function_name,"enableAll");
