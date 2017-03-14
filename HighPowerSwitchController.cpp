@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+x// ----------------------------------------------------------------------------
 // HighPowerSwitchController.cpp
 //
 //
@@ -627,6 +627,22 @@ void HighPowerSwitchController::updateAllChannels()
   uint32_t channels = channels_;
   interrupts();
   setChannels(channels);
+}
+
+void HighPowerSwitchController::setPwmStatusTrue(size_t channel, size_t level)
+{
+  if ((channel<constants::CHANNEL_COUNT) && (level <=PMW_LEVEL_COUNT_MAX))
+  {
+    pwm_status_[channel][level] = true;
+  }
+}
+
+void HighPowerSwitchController::setPwmStatusStoppedFalse(size_t channel, size_t level)
+{
+  if ((channel<constants::CHANNEL_COUNT) && (level <=PMW_LEVEL_COUNT_MAX))
+  {
+    pwm_status_[channel][level] = false;
+  }
 }
 
 void HighPowerSwitchController::setAllPwmStatusFalse()

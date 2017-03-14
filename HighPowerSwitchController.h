@@ -105,6 +105,8 @@ private:
   void updateChannel(const size_t channel);
   void updateAllChannels();
 
+  void setPwmStatusTrue(size_t channel, size_t level);
+  void setPwmStatusFalse(size_t channel, size_t level);
   void setAllPwmStatusFalse();
 
   // Handlers
