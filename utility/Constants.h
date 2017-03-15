@@ -43,6 +43,7 @@ extern const int bad_index;
 struct PulseInfo
 {
   uint32_t channels;
+  uint8_t level;
   EventIdPair event_id_pair;
 };
 

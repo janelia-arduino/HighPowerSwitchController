@@ -75,6 +75,10 @@ public:
   void stopPwm(const int pwm_index);
   void stopAllPwm();
 
+  typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> ChannelPwmStatus;
+  typedef Array<ChannelPwmStatus,high_power_switch_controller::constants::CHANNEL_COUNT> PwmStatus;
+  PwmStatus getPwmStatus();
+
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
 
   // Handlers
@@ -92,7 +96,7 @@ private:
   bool enabled_;
   uint32_t channels_;
   long powers_[high_power_switch_controller::constants::CHANNEL_COUNT];
-  bool pwm_status_[high_power_switch_controller::constants::CHANNEL_COUNT][constants::PWM_LEVEL_COUNT_MAX+1];
+  long pwm_status_[high_power_switch_controller::constants::CHANNEL_COUNT][high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX];
 
   EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
@@ -105,9 +109,11 @@ private:
   void updateChannel(const size_t channel);
   void updateAllChannels();
 
-  void setPwmStatusTrue(size_t channel, size_t level);
-  void setPwmStatusFalse(size_t channel, size_t level);
-  void setAllPwmStatusFalse();
+  void setChannelPwmStatusRunning(size_t channel, size_t level);
+  void setChannelsPwmStatusRunning(uint32_t channels, size_t level);
+  void setChannelPwmStatusStopped(size_t channel, size_t level);
+  void setChannelsPwmStatusStopped(uint32_t channels, size_t level);
+  void setAllPwmStatusStopped();
 
   // Handlers
   void setPowerMaxHandler(const size_t channel);

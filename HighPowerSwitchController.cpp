@@ -1,4 +1,4 @@
-x// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // HighPowerSwitchController.cpp
 //
 //
@@ -40,7 +40,7 @@ void HighPowerSwitchController::setup()
   setAllChannelsOff();
 
   // PWM Status
-  setAllPwmStatusFalse();
+  setAllPwmStatusStopped();
 
   // Interrupts
 
@@ -222,6 +222,10 @@ void HighPowerSwitchController::setup()
   modular_server::Function & stop_all_pwm_function = modular_server_.createFunction(constants::stop_all_pwm_function_name);
   stop_all_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::stopAllPwmHandler));
 
+  modular_server::Function & get_pwm_status_function = modular_server_.createFunction(constants::get_pwm_status_function_name);
+  get_pwm_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPwmStatusHandler));
+  get_pwm_status_function.setReturnTypeArray();
+
   // Callbacks
 
 }
@@ -329,6 +333,7 @@ void HighPowerSwitchController::setChannelOn(const size_t channel)
     noInterrupts();
     channels_ |= bit;
     analogWrite(constants::signal_pins[channel],analog_write_value);
+    pwm_status_[channel][0] = power;
     interrupts();
   }
 }
@@ -343,6 +348,7 @@ void HighPowerSwitchController::setChannelOff(const size_t channel)
     noInterrupts();
     channels_ &= ~bit;
     analogWrite(constants::signal_pins[channel],constants::analog_write_min);
+    pwm_status_[channel][0] = constants::analog_write_min;
     interrupts();
   }
 }
@@ -381,7 +387,7 @@ void HighPowerSwitchController::toggleChannel(const size_t channel)
     uint32_t channels = channels_;
     interrupts();
     channels ^= bit;
-    if ((bit << channel) & channels)
+    if (bit & channels)
     {
       setChannelOn(channel);
     }
@@ -505,6 +511,7 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
   }
   high_power_switch_controller::constants::PulseInfo pulse_info;
   pulse_info.channels = channels;
+  pulse_info.level = 1;
   int index = indexed_pulses_.add(pulse_info);
   EventIdPair event_id_pair = event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOnHandler),
                                                                  makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
@@ -531,6 +538,7 @@ int HighPowerSwitchController::startPwm(const uint32_t channels,
   }
   high_power_switch_controller::constants::PulseInfo pulse_info;
   pulse_info.channels = channels;
+  pulse_info.level = 1;
   int index = indexed_pulses_.add(pulse_info);
   EventIdPair event_id_pair = event_controller_.addInfinitePwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOnHandler),
                                                                          makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
@@ -564,6 +572,19 @@ void HighPowerSwitchController::stopAllPwm()
   {
     stopPwm(i);
   }
+}
+
+HighPowerSwitchController::PwmStatus HighPowerSwitchController::getPwmStatus()
+{
+  PwmStatus pwm_status;
+  noInterrupts();
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    ChannelPwmStatus channel_pwm_status(pwm_status_[channel]);
+    pwm_status.push_back(channel_pwm_status);
+  }
+  interrupts();
+  return pwm_status;
 }
 
 uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & channels_array)
@@ -615,7 +636,7 @@ void HighPowerSwitchController::updateChannel(const size_t channel)
   noInterrupts();
   uint32_t channels = channels_;
   interrupts();
-  if ((bit << channel) & channels)
+  if (bit & channels)
   {
     setChannelOn(channel);
   }
@@ -629,31 +650,71 @@ void HighPowerSwitchController::updateAllChannels()
   setChannels(channels);
 }
 
-void HighPowerSwitchController::setPwmStatusTrue(size_t channel, size_t level)
+void HighPowerSwitchController::setChannelPwmStatusRunning(size_t channel, size_t level)
 {
-  if ((channel<constants::CHANNEL_COUNT) && (level <=PMW_LEVEL_COUNT_MAX))
+  if ((channel < constants::CHANNEL_COUNT) && (level < constants::PWM_LEVEL_COUNT_MAX))
   {
-    pwm_status_[channel][level] = true;
+    noInterrupts();
+    pwm_status_[channel][level] = 1;
+    interrupts();
   }
 }
 
-void HighPowerSwitchController::setPwmStatusStoppedFalse(size_t channel, size_t level)
+void HighPowerSwitchController::setChannelsPwmStatusRunning(uint32_t channels, size_t level)
 {
-  if ((channel<constants::CHANNEL_COUNT) && (level <=PMW_LEVEL_COUNT_MAX))
+  if (level < constants::PWM_LEVEL_COUNT_MAX)
   {
-    pwm_status_[channel][level] = false;
+    uint32_t bit = 1;
+    noInterrupts();
+    for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+    {
+      if ((bit << channel) & channels)
+      {
+        pwm_status_[channel][level] = 1;
+      }
+    }
+    interrupts();
   }
 }
 
-void HighPowerSwitchController::setAllPwmStatusFalse()
+void HighPowerSwitchController::setChannelPwmStatusStopped(size_t channel, size_t level)
 {
+  if ((channel < constants::CHANNEL_COUNT) && (level < constants::PWM_LEVEL_COUNT_MAX))
+  {
+    noInterrupts();
+    pwm_status_[channel][level] = 0;
+    interrupts();
+  }
+}
+
+void HighPowerSwitchController::setChannelsPwmStatusStopped(uint32_t channels, size_t level)
+{
+  if (level < constants::PWM_LEVEL_COUNT_MAX)
+  {
+    uint32_t bit = 1;
+    noInterrupts();
+    for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+    {
+      if ((bit << channel) & channels)
+      {
+        pwm_status_[channel][level] = 0;
+      }
+    }
+    interrupts();
+  }
+}
+
+void HighPowerSwitchController::setAllPwmStatusStopped()
+{
+  noInterrupts();
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
   {
-    for (size_t level=0; level<=constants::PWM_LEVEL_COUNT_MAX; ++level)
+    for (size_t level=0; level<constants::PWM_LEVEL_COUNT_MAX; ++level)
     {
-      pwm_status_[channel][level] = false;
+      pwm_status_[channel][level] = 0;
     }
   }
+  interrupts();
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -675,12 +736,19 @@ void HighPowerSwitchController::setAllPwmStatusFalse()
 
 void HighPowerSwitchController::startPwmHandler(int index)
 {
+  uint32_t & channels = indexed_pulses_[index].channels;
+  uint8_t & level = indexed_pulses_[index].level;
+
+  setChannelsPwmStatusRunning(channels,level);
 }
 
 void HighPowerSwitchController::stopPwmHandler(int index)
 {
   uint32_t & channels = indexed_pulses_[index].channels;
+  uint8_t & level = indexed_pulses_[index].level;
+
   setChannelsOff(channels);
+  setChannelsPwmStatusStopped(channels,level);
   indexed_pulses_.remove(index);
 }
 
@@ -987,6 +1055,24 @@ void HighPowerSwitchController::stopAllPwmHandler()
 
 void HighPowerSwitchController::getPwmStatusHandler()
 {
+  modular_server_.response().writeResultKey();
+  modular_server_.response().beginArray();
+
+  PwmStatus pwm_status = getPwmStatus();
+  for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
+  {
+    modular_server_.response().beginArray();
+
+    for (size_t level=0; level<constants::PWM_LEVEL_COUNT_MAX; ++level)
+    {
+      modular_server_.response().write(pwm_status[channel][level]);
+    }
+
+    modular_server_.response().endArray();
+  }
+
+  modular_server_.response().endArray();
+
 }
 
 void HighPowerSwitchController::setChannelsOnHandler(int index)
