@@ -101,6 +101,8 @@ CONSTANT_STRING(get_channels_off_function_name,"getChannelsOff");
 CONSTANT_STRING(get_channel_count_function_name,"getChannelCount");
 CONSTANT_STRING(add_pwm_function_name,"addPwm");
 CONSTANT_STRING(start_pwm_function_name,"startPwm");
+CONSTANT_STRING(add_recursive_pwm_function_name,"addRecursivePwm");
+CONSTANT_STRING(start_recursive_pwm_function_name,"startRecursivePwm");
 CONSTANT_STRING(stop_pwm_function_name,"stopPwm");
 CONSTANT_STRING(stop_all_pwm_function_name,"stopAllPwm");
 CONSTANT_STRING(get_pwm_status_function_name,"getPwmStatus");

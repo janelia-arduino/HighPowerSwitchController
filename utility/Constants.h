@@ -20,7 +20,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=9};
-enum{FUNCTION_COUNT_MAX=30};
+enum{FUNCTION_COUNT_MAX=32};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern ConstantString device_name;
@@ -40,10 +40,14 @@ extern const long channel_pwm_max;
 
 extern const int bad_index;
 
-struct PulseInfo
+struct PwmInfo
 {
   uint32_t channels;
   uint8_t level;
+  int child_index;
+  long delay;
+  long period;
+  long on_duration;
   EventIdPair event_id_pair;
 };
 
@@ -113,6 +117,8 @@ extern ConstantString get_channels_off_function_name;
 extern ConstantString get_channel_count_function_name;
 extern ConstantString add_pwm_function_name;
 extern ConstantString start_pwm_function_name;
+extern ConstantString add_recursive_pwm_function_name;
+extern ConstantString start_recursive_pwm_function_name;
 extern ConstantString stop_pwm_function_name;
 extern ConstantString stop_all_pwm_function_name;
 extern ConstantString get_pwm_status_function_name;

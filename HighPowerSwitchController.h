@@ -72,11 +72,23 @@ public:
                const long delay,
                const long period,
                const long on_duration);
+
+  typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> RecursivePwmValues;
+
+  int addRecursivePwm(const uint32_t channels,
+                      RecursivePwmValues delays,
+                      RecursivePwmValues periods,
+                      RecursivePwmValues on_durations,
+                      const long count);
+  int startRecursivePwm(const uint32_t channels,
+                        RecursivePwmValues delays,
+                        RecursivePwmValues periods,
+                        RecursivePwmValues on_durations);
+
   void stopPwm(const int pwm_index);
   void stopAllPwm();
 
-  typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> ChannelPwmStatus;
-  typedef Array<ChannelPwmStatus,high_power_switch_controller::constants::CHANNEL_COUNT> PwmStatus;
+  typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> PwmStatus;
   PwmStatus getPwmStatus();
 
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
@@ -100,8 +112,8 @@ private:
 
   EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
-  IndexedContainer<high_power_switch_controller::constants::PulseInfo,
-                   high_power_switch_controller::constants::INDEXED_PULSES_COUNT_MAX> indexed_pulses_;
+  IndexedContainer<high_power_switch_controller::constants::PwmInfo,
+                   high_power_switch_controller::constants::INDEXED_PWM_COUNT_MAX> indexed_pwm_;
 
   long powerToAnalogWriteValue(const long power);
   void setPowersToMax();
@@ -144,11 +156,15 @@ private:
   void getChannelCountHandler();
   void addPwmHandler();
   void startPwmHandler();
+  void addRecursivePwmHandler();
+  void startRecursivePwmHandler();
   void stopPwmHandler();
   void stopAllPwmHandler();
   void getPwmStatusHandler();
   void setChannelsOnHandler(int index);
   void setChannelsOffHandler(int index);
+  void startRecursivePwmHandler(int index);
+  void stopRecursivePwmHandler(int index);
 
 };
 
