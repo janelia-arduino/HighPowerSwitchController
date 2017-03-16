@@ -92,10 +92,11 @@ public:
   PwmStatus getPwmStatus();
 
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
+  RecursivePwmValues arrayToRecursivePwmValues(ArduinoJson::JsonArray & array);
 
   // Handlers
-  virtual void startPwmHandler(int index);
-  virtual void stopPwmHandler(int index);
+  virtual void startPwmHandler(int pwm_index);
+  virtual void stopPwmHandler(int pwm_index);
 
 private:
   modular_server::Interrupt interrupts_[high_power_switch_controller::constants::INTERRUPT_COUNT_MAX];
@@ -126,6 +127,8 @@ private:
   void setChannelPwmStatusStopped(size_t channel, size_t level);
   void setChannelsPwmStatusStopped(uint32_t channels, size_t level);
   void setAllPwmStatusStopped();
+
+  void returnPwmIndexResponse(int pwm_index);
 
   // Handlers
   void setPowerMaxHandler(const size_t channel);
@@ -161,10 +164,11 @@ private:
   void stopPwmHandler();
   void stopAllPwmHandler();
   void getPwmStatusHandler();
-  void setChannelsOnHandler(int index);
-  void setChannelsOffHandler(int index);
-  void startRecursivePwmHandler(int index);
-  void stopRecursivePwmHandler(int index);
+  void getPwmInfoHandler();
+  void setChannelsOnHandler(int pwm_index);
+  void setChannelsOffHandler(int pwm_index);
+  void startRecursivePwmHandler(int pwm_index);
+  void stopRecursivePwmHandler(int pwm_index);
 
 };
 

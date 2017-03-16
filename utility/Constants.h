@@ -19,9 +19,17 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
-enum{PARAMETER_COUNT_MAX=9};
-enum{FUNCTION_COUNT_MAX=32};
+enum{PARAMETER_COUNT_MAX=12};
+enum{FUNCTION_COUNT_MAX=33};
 enum{CALLBACK_COUNT_MAX=1};
+
+enum
+  {
+    NO_PWM_AVAILABLE_INDEX=-1,
+    NO_CHILD_PWM_INDEX=-2,
+    PWM_ARRAY_LENGTHS_NOT_EQUAL_INDEX=-3,
+    PWM_ARRAY_LENGTHS_ARE_ZERO_INDEX=-4,
+  };
 
 extern ConstantString device_name;
 
@@ -38,8 +46,6 @@ extern const long analog_write_max;
 extern const long channel_pwm_min;
 extern const long channel_pwm_max;
 
-extern const int bad_index;
-
 struct PwmInfo
 {
   uint32_t channels;
@@ -48,8 +54,12 @@ struct PwmInfo
   long delay;
   long period;
   long on_duration;
+  long count;
   EventIdPair event_id_pair;
 };
+
+extern ConstantString level_string;
+extern ConstantString child_index_string;
 
 // Interrupts
 
@@ -89,6 +99,12 @@ extern const long count_max;
 
 extern ConstantString pwm_index_parameter_name;
 
+extern ConstantString delays_parameter_name;
+
+extern ConstantString periods_parameter_name;
+
+extern ConstantString on_durations_parameter_name;
+
 // Functions
 extern ConstantString enable_all_function_name;
 extern ConstantString disable_all_function_name;
@@ -122,11 +138,14 @@ extern ConstantString start_recursive_pwm_function_name;
 extern ConstantString stop_pwm_function_name;
 extern ConstantString stop_all_pwm_function_name;
 extern ConstantString get_pwm_status_function_name;
+extern ConstantString get_pwm_info_function_name;
 
 // Callbacks
 
 // Errors
-extern ConstantString pwm_error;
+extern ConstantString no_pwm_available_error;
+extern ConstantString pwm_array_lengths_not_equal_error;
+extern ConstantString pwm_array_lengths_are_zero_error;
 }
 }
 #include "5x3.h"

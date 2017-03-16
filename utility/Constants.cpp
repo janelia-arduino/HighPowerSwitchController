@@ -34,7 +34,8 @@ const long analog_write_max = 255;
 const long channel_pwm_min = 0;
 const long channel_pwm_max = 24;
 
-const int bad_index = -1;
+CONSTANT_STRING(level_string,"level");
+CONSTANT_STRING(child_index_string,"child_index");
 
 // Interrupts
 
@@ -73,6 +74,12 @@ const long count_max = 2000000000;
 
 CONSTANT_STRING(pwm_index_parameter_name,"pwm_index");
 
+CONSTANT_STRING(delays_parameter_name,"delays");
+
+CONSTANT_STRING(periods_parameter_name,"periods");
+
+CONSTANT_STRING(on_durations_parameter_name,"on_durations");
+
 // Functions
 CONSTANT_STRING(enable_all_function_name,"enableAll");
 CONSTANT_STRING(disable_all_function_name,"disableAll");
@@ -106,10 +113,13 @@ CONSTANT_STRING(start_recursive_pwm_function_name,"startRecursivePwm");
 CONSTANT_STRING(stop_pwm_function_name,"stopPwm");
 CONSTANT_STRING(stop_all_pwm_function_name,"stopAllPwm");
 CONSTANT_STRING(get_pwm_status_function_name,"getPwmStatus");
+CONSTANT_STRING(get_pwm_info_function_name,"getPwmInfo");
 
 // Callbacks
 
 // Errors
-CONSTANT_STRING(pwm_error,"Maximum number of pwm already set, must stop one to add another.");
+CONSTANT_STRING(no_pwm_available_error,"Maximum number of PWM already set, must stop one to add another.");
+CONSTANT_STRING(pwm_array_lengths_not_equal_error,"PWM parameter arrays must be equal length.");
+CONSTANT_STRING(pwm_array_lengths_are_zero_error,"PWM parameter arrays must have length greater than 0.");
 }
 }
