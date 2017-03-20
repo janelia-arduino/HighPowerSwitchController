@@ -100,17 +100,17 @@ void HighPowerSwitchController::setup()
 
   modular_server::Parameter & delays_parameter = modular_server_.createParameter(constants::delays_parameter_name);
   delays_parameter.setRange(constants::delay_min,constants::delay_max);
-  delays_parameter.setArrayLengthRange(constants::PWM_LEVEL_COUNT_MIN,constants::PWM_LEVEL_COUNT_MAX-1);
+  delays_parameter.setArrayLengthRange(1,constants::PWM_LEVEL_COUNT_MAX);
   delays_parameter.setUnits(constants::ms_unit);
 
   modular_server::Parameter & periods_parameter = modular_server_.createParameter(constants::periods_parameter_name);
   periods_parameter.setRange(constants::period_min,constants::period_max);
-  periods_parameter.setArrayLengthRange(constants::PWM_LEVEL_COUNT_MIN,constants::PWM_LEVEL_COUNT_MAX-1);
+  periods_parameter.setArrayLengthRange(1,constants::PWM_LEVEL_COUNT_MAX);
   periods_parameter.setUnits(constants::ms_unit);
 
   modular_server::Parameter & on_durations_parameter = modular_server_.createParameter(constants::on_durations_parameter_name);
   on_durations_parameter.setRange(constants::on_duration_min,constants::on_duration_max);
-  on_durations_parameter.setArrayLengthRange(constants::PWM_LEVEL_COUNT_MIN,constants::PWM_LEVEL_COUNT_MAX-1);
+  on_durations_parameter.setArrayLengthRange(1,constants::PWM_LEVEL_COUNT_MAX);
   on_durations_parameter.setUnits(constants::ms_unit);
 
   // Functions
@@ -254,9 +254,9 @@ void HighPowerSwitchController::setup()
   modular_server::Function & stop_all_pwm_function = modular_server_.createFunction(constants::stop_all_pwm_function_name);
   stop_all_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::stopAllPwmHandler));
 
-  modular_server::Function & get_pwm_status_function = modular_server_.createFunction(constants::get_pwm_status_function_name);
-  get_pwm_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPwmStatusHandler));
-  get_pwm_status_function.setReturnTypeArray();
+  modular_server::Function & get_channels_pwm_status_function = modular_server_.createFunction(constants::get_channels_pwm_status_function_name);
+  get_channels_pwm_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelsPwmStatusHandler));
+  get_channels_pwm_status_function.setReturnTypeArray();
 
   modular_server::Function & get_pwm_info_function = modular_server_.createFunction(constants::get_pwm_info_function_name);
   get_pwm_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPwmInfoHandler));
@@ -369,7 +369,6 @@ void HighPowerSwitchController::setChannelOn(const size_t channel)
     noInterrupts();
     channels_ |= bit;
     analogWrite(constants::signal_pins[channel],analog_write_value);
-    pwm_status_[channel][0] = power;
     interrupts();
   }
 }
@@ -384,7 +383,6 @@ void HighPowerSwitchController::setChannelOff(const size_t channel)
     noInterrupts();
     channels_ &= ~bit;
     analogWrite(constants::signal_pins[channel],constants::analog_write_min);
-    pwm_status_[channel][0] = constants::analog_write_min;
     interrupts();
   }
 }
@@ -547,7 +545,7 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
   }
   high_power_switch_controller::constants::PwmInfo pwm_info;
   pwm_info.channels = channels;
-  pwm_info.level = 1;
+  pwm_info.level = 0;
   pwm_info.child_index = constants::NO_CHILD_PWM_INDEX;
   pwm_info.delay = delay;
   pwm_info.period = period;
@@ -579,7 +577,7 @@ int HighPowerSwitchController::startPwm(const uint32_t channels,
   }
   high_power_switch_controller::constants::PwmInfo pwm_info;
   pwm_info.channels = channels;
-  pwm_info.level = 1;
+  pwm_info.level = 0;
   pwm_info.child_index = constants::NO_CHILD_PWM_INDEX;
   pwm_info.delay = delay;
   pwm_info.period = period;
@@ -625,15 +623,15 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
   int pwm_index = constants::NO_CHILD_PWM_INDEX;
 
   constants::PwmInfo pwm_info;
-  for (uint8_t level=1; level <= level_count; ++level)
+  for (uint8_t level=0; level < level_count; ++level)
   {
     pwm_info.channels = channels;
     pwm_info.level = level;
     pwm_info.child_index = pwm_index;
-    pwm_info.delay = delays[level-1];
-    pwm_info.period = periods[level-1];
-    pwm_info.on_duration = on_durations[level-1];
-    if (pwm_index == constants::NO_CHILD_PWM_INDEX)
+    pwm_info.delay = delays[level];
+    pwm_info.period = periods[level];
+    pwm_info.on_duration = on_durations[level];
+    if (level == (level_count - 1))
     {
       pwm_info.count = count;
     }
@@ -679,7 +677,13 @@ void HighPowerSwitchController::stopPwm(const int pwm_index)
   if (indexed_pwm_.indexHasValue(pwm_index))
   {
     constants::PwmInfo pwm_info = indexed_pwm_[pwm_index];
+    uint32_t & channels = pwm_info.channels;
+    uint8_t & level = pwm_info.level;
+
+    setChannelsOff(channels);
+    setChannelsPwmStatusStopped(channels,level);
     event_controller_.remove(pwm_info.event_id_pair);
+    indexed_pwm_.remove(pwm_index);
   }
 }
 
@@ -691,17 +695,17 @@ void HighPowerSwitchController::stopAllPwm()
   }
 }
 
-HighPowerSwitchController::PwmStatus HighPowerSwitchController::getPwmStatus()
+HighPowerSwitchController::ChannelsPwmStatus HighPowerSwitchController::getChannelsPwmStatus()
 {
-  PwmStatus pwm_status;
+  ChannelsPwmStatus channels_pwm_status;
   noInterrupts();
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
   {
-    RecursivePwmValues channel_pwm_status(pwm_status_[channel]);
-    pwm_status.push_back(channel_pwm_status);
+    RecursivePwmValues channel_pwm_status(channels_pwm_status_[channel]);
+    channels_pwm_status.push_back(channel_pwm_status);
   }
   interrupts();
-  return pwm_status;
+  return channels_pwm_status;
 }
 
 uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & channels_array)
@@ -780,17 +784,17 @@ void HighPowerSwitchController::updateAllChannels()
   setChannels(channels);
 }
 
-void HighPowerSwitchController::setChannelPwmStatusRunning(size_t channel, size_t level)
+void HighPowerSwitchController::setChannelPwmStatusRunning(size_t channel, size_t level, int pwm_index)
 {
   if ((channel < constants::CHANNEL_COUNT) && (level < constants::PWM_LEVEL_COUNT_MAX))
   {
     noInterrupts();
-    pwm_status_[channel][level] = 1;
+    channels_pwm_status_[channel][level] = pwm_index;
     interrupts();
   }
 }
 
-void HighPowerSwitchController::setChannelsPwmStatusRunning(uint32_t channels, size_t level)
+void HighPowerSwitchController::setChannelsPwmStatusRunning(uint32_t channels, size_t level, int pwm_index)
 {
   if (level < constants::PWM_LEVEL_COUNT_MAX)
   {
@@ -800,7 +804,7 @@ void HighPowerSwitchController::setChannelsPwmStatusRunning(uint32_t channels, s
     {
       if ((bit << channel) & channels)
       {
-        pwm_status_[channel][level] = 1;
+        channels_pwm_status_[channel][level] = pwm_index;
       }
     }
     interrupts();
@@ -812,7 +816,7 @@ void HighPowerSwitchController::setChannelPwmStatusStopped(size_t channel, size_
   if ((channel < constants::CHANNEL_COUNT) && (level < constants::PWM_LEVEL_COUNT_MAX))
   {
     noInterrupts();
-    pwm_status_[channel][level] = 0;
+    channels_pwm_status_[channel][level] = constants::PWM_NOT_RUNNING_INDEX;
     interrupts();
   }
 }
@@ -827,7 +831,7 @@ void HighPowerSwitchController::setChannelsPwmStatusStopped(uint32_t channels, s
     {
       if ((bit << channel) & channels)
       {
-        pwm_status_[channel][level] = 0;
+        channels_pwm_status_[channel][level] = constants::PWM_NOT_RUNNING_INDEX;
       }
     }
     interrupts();
@@ -841,7 +845,7 @@ void HighPowerSwitchController::setAllPwmStatusStopped()
   {
     for (size_t level=0; level<constants::PWM_LEVEL_COUNT_MAX; ++level)
     {
-      pwm_status_[channel][level] = 0;
+      channels_pwm_status_[channel][level] = constants::PWM_NOT_RUNNING_INDEX;
     }
   }
   interrupts();
@@ -889,17 +893,12 @@ void HighPowerSwitchController::startPwmHandler(int pwm_index)
   uint32_t & channels = indexed_pwm_[pwm_index].channels;
   uint8_t & level = indexed_pwm_[pwm_index].level;
 
-  setChannelsPwmStatusRunning(channels,level);
+  setChannelsPwmStatusRunning(channels,level,pwm_index);
 }
 
 void HighPowerSwitchController::stopPwmHandler(int pwm_index)
 {
-  uint32_t & channels = indexed_pwm_[pwm_index].channels;
-  uint8_t & level = indexed_pwm_[pwm_index].level;
-
-  setChannelsOff(channels);
-  setChannelsPwmStatusStopped(channels,level);
-  indexed_pwm_.remove(pwm_index);
+  stopPwm(pwm_index);
 }
 
 void HighPowerSwitchController::setPowerMaxHandler(const size_t channel)
@@ -1213,19 +1212,19 @@ void HighPowerSwitchController::stopAllPwmHandler()
   stopAllPwm();
 }
 
-void HighPowerSwitchController::getPwmStatusHandler()
+void HighPowerSwitchController::getChannelsPwmStatusHandler()
 {
   modular_server_.response().writeResultKey();
   modular_server_.response().beginArray();
 
-  PwmStatus pwm_status = getPwmStatus();
+  ChannelsPwmStatus channels_pwm_status = getChannelsPwmStatus();
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
   {
     modular_server_.response().beginArray();
 
     for (size_t level=0; level<constants::PWM_LEVEL_COUNT_MAX; ++level)
     {
-      modular_server_.response().write(pwm_status[channel][level]);
+      modular_server_.response().write(channels_pwm_status[channel][level]);
     }
 
     modular_server_.response().endArray();

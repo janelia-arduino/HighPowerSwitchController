@@ -25,10 +25,11 @@ enum{CALLBACK_COUNT_MAX=1};
 
 enum
   {
-    NO_PWM_AVAILABLE_INDEX=-1,
-    NO_CHILD_PWM_INDEX=-2,
-    PWM_ARRAY_LENGTHS_NOT_EQUAL_INDEX=-3,
-    PWM_ARRAY_LENGTHS_ARE_ZERO_INDEX=-4,
+    PWM_NOT_RUNNING_INDEX=-1,
+    NO_PWM_AVAILABLE_INDEX=-2,
+    NO_CHILD_PWM_INDEX=-3,
+    PWM_ARRAY_LENGTHS_NOT_EQUAL_INDEX=-4,
+    PWM_ARRAY_LENGTHS_ARE_ZERO_INDEX=-5,
   };
 
 extern ConstantString device_name;
@@ -137,7 +138,7 @@ extern ConstantString add_recursive_pwm_function_name;
 extern ConstantString start_recursive_pwm_function_name;
 extern ConstantString stop_pwm_function_name;
 extern ConstantString stop_all_pwm_function_name;
-extern ConstantString get_pwm_status_function_name;
+extern ConstantString get_channels_pwm_status_function_name;
 extern ConstantString get_pwm_info_function_name;
 
 // Callbacks

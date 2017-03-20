@@ -24,7 +24,6 @@ enum {CHANNEL_COUNT=8};
 enum{EVENT_COUNT_MAX=32};
 enum{INDEXED_PWM_COUNT_MAX=16};
 
-enum{PWM_LEVEL_COUNT_MIN=1};
 enum{PWM_LEVEL_COUNT_MAX=4};
 
 extern const size_t signal_pins[CHANNEL_COUNT];
