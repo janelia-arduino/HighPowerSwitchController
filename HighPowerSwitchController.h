@@ -76,20 +76,20 @@ public:
   typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> RecursivePwmValues;
 
   int addRecursivePwm(const uint32_t channels,
-                      RecursivePwmValues delays,
+                      const long delay,
                       RecursivePwmValues periods,
                       RecursivePwmValues on_durations,
                       const long count);
   int startRecursivePwm(const uint32_t channels,
-                        RecursivePwmValues delays,
+                        const long delay,
                         RecursivePwmValues periods,
                         RecursivePwmValues on_durations);
 
   void stopPwm(const int pwm_index);
   void stopAllPwm();
 
-  typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmStatus;
-  ChannelsPwmStatus getChannelsPwmStatus();
+  typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmIndexes;
+  ChannelsPwmIndexes getChannelsPwmIndexes();
 
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
   RecursivePwmValues arrayToRecursivePwmValues(ArduinoJson::JsonArray & array);
@@ -109,12 +109,14 @@ private:
   bool enabled_;
   uint32_t channels_;
   long powers_[high_power_switch_controller::constants::CHANNEL_COUNT];
-  long channels_pwm_status_[high_power_switch_controller::constants::CHANNEL_COUNT][high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX];
+  long channels_pwm_indexes_[high_power_switch_controller::constants::CHANNEL_COUNT][high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX];
 
   EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
   IndexedContainer<high_power_switch_controller::constants::PwmInfo,
                    high_power_switch_controller::constants::INDEXED_PWM_COUNT_MAX> indexed_pwm_;
+
+  void removeParentAndChildrenPwmInfo(const int pwm_index);
 
   long powerToAnalogWriteValue(const long power);
   void setPowersToMax();
@@ -122,11 +124,11 @@ private:
   void updateChannel(const size_t channel);
   void updateAllChannels();
 
-  void setChannelPwmStatusRunning(size_t channel, size_t level, int pwm_index);
-  void setChannelsPwmStatusRunning(uint32_t channels, size_t level, int pwm_index);
-  void setChannelPwmStatusStopped(size_t channel, size_t level);
-  void setChannelsPwmStatusStopped(uint32_t channels, size_t level);
-  void setAllPwmStatusStopped();
+  void initializePwmIndexes();
+  void setChannelPwmIndexesRunning(size_t channel, size_t level, int pwm_index);
+  void setChannelsPwmIndexesRunning(uint32_t channels, size_t level, int pwm_index);
+  void setChannelPwmIndexesStopped(size_t channel, size_t level);
+  void setChannelsPwmIndexesStopped(uint32_t channels, size_t level);
 
   void returnPwmIndexResponse(int pwm_index);
 
@@ -163,7 +165,7 @@ private:
   void startRecursivePwmHandler();
   void stopPwmHandler();
   void stopAllPwmHandler();
-  void getChannelsPwmStatusHandler();
+  void getChannelsPwmIndexesHandler();
   void getPwmInfoHandler();
   void setChannelsOnHandler(int pwm_index);
   void setChannelsOffHandler(int pwm_index);

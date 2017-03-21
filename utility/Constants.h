@@ -50,7 +50,9 @@ extern const long channel_pwm_max;
 struct PwmInfo
 {
   uint32_t channels;
+  bool running;
   uint8_t level;
+  bool top_level;
   int child_index;
   long delay;
   long period;
@@ -59,7 +61,9 @@ struct PwmInfo
   EventIdPair event_id_pair;
 };
 
+extern ConstantString running_string;
 extern ConstantString level_string;
+extern ConstantString top_level_string;
 extern ConstantString child_index_string;
 
 // Interrupts
@@ -138,7 +142,7 @@ extern ConstantString add_recursive_pwm_function_name;
 extern ConstantString start_recursive_pwm_function_name;
 extern ConstantString stop_pwm_function_name;
 extern ConstantString stop_all_pwm_function_name;
-extern ConstantString get_channels_pwm_status_function_name;
+extern ConstantString get_channels_pwm_indexes_function_name;
 extern ConstantString get_pwm_info_function_name;
 
 // Callbacks
