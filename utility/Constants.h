@@ -70,6 +70,7 @@ extern ConstantString child_index_string;
 
 // Units
 extern ConstantString ms_unit;
+extern ConstantString percent_unit;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]

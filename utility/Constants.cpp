@@ -43,6 +43,7 @@ CONSTANT_STRING(child_index_string,"child_index");
 
 // Units
 CONSTANT_STRING(ms_unit,"ms");
+CONSTANT_STRING(percent_unit,"%");
 
 // Properties
 CONSTANT_STRING(power_max_property_name,"powerMax");

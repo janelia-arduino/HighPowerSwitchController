@@ -60,6 +60,7 @@ void HighPowerSwitchController::setup()
   // Properties
   modular_server::Property & power_max_property = modular_server_.createProperty(constants::power_max_property_name,constants::power_max_default);
   power_max_property.setRange(constants::power_min,constants::power_max);
+  power_max_property.setUnits(constants::percent_unit);
   power_max_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&HighPowerSwitchController::setPowerMaxHandler));
 
   setPowersToMax();
@@ -74,10 +75,12 @@ void HighPowerSwitchController::setup()
 
   modular_server::Parameter & power_parameter = modular_server_.createParameter(constants::power_parameter_name);
   power_parameter.setRange(constants::power_min,constants::power_max);
+  power_parameter.setUnits(constants::percent_unit);
 
   modular_server::Parameter & powers_parameter = modular_server_.createParameter(constants::powers_parameter_name);
   powers_parameter.setRange(constants::power_min,constants::power_max);
   powers_parameter.setArrayLengthRange(constants::CHANNEL_COUNT,constants::CHANNEL_COUNT);
+  powers_parameter.setUnits(constants::percent_unit);
 
   modular_server::Parameter & delay_parameter = modular_server_.createParameter(constants::delay_parameter_name);
   delay_parameter.setRange(constants::delay_min,constants::delay_max);
