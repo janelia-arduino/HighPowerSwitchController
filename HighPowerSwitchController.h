@@ -85,7 +85,7 @@ public:
                         RecursivePwmValues periods,
                         RecursivePwmValues on_durations);
 
-  void addStopFunctor(const int pwm_index, const Functor0 & functor);
+  void addCountCompletedFunctor(const int pwm_index, const Functor0 & functor);
 
   void stopPwm(const int pwm_index);
   void stopAllPwm();

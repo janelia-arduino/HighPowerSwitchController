@@ -58,8 +58,8 @@ struct PwmInfo
   long period;
   long on_duration;
   long count;
-  bool forced_stop;
-  Functor0 functor_stop;
+  bool stopped_before_count_completed;
+  Functor0 functor_count_completed;
   EventIdPair event_id_pair;
 };
 
