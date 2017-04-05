@@ -924,7 +924,7 @@ void HighPowerSwitchController::stopPwmHandler(int pwm_index)
   {
     removeParentAndChildrenPwmInfo(pwm_index);
   }
-  if (!stopped_before_count_completed)
+  if (!stopped_before_count_completed && functor_count_completed)
   {
     functor_count_completed();
   }
