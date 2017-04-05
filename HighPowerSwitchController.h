@@ -92,6 +92,10 @@ public:
   void stopPwm(const int pwm_index);
   void stopAllPwm();
 
+  void addEventUsingDelay(const Functor1<int> & functor,
+                          const uint32_t delay,
+                          const int arg=-1);
+
   typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmIndexes;
   ChannelsPwmIndexes getChannelsPwmIndexes();
 

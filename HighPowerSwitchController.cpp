@@ -542,7 +542,7 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
                                       const long on_duration,
                                       const long count)
 {
-  if (indexed_pwm_.full())
+  if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
   {
     return constants::NO_PWM_AVAILABLE_INDEX;
   }
@@ -588,7 +588,7 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
                                                RecursivePwmValues on_durations,
                                                const long count)
 {
-  if (indexed_pwm_.full())
+  if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
   {
     return constants::NO_PWM_AVAILABLE_INDEX;
   }
@@ -699,6 +699,18 @@ void HighPowerSwitchController::stopAllPwm()
   {
     stopPwm(i);
   }
+  event_controller_.removeAllEvents();
+}
+
+void HighPowerSwitchController::addEventUsingDelay(const Functor1<int> & functor,
+                                                   const uint32_t delay,
+                                                   const int arg)
+{
+  if (event_controller_.eventsAvailable() > 0)
+  {
+    return;
+  }
+  event_controller_.addEventUsingDelay(functor,delay,arg);
 }
 
 HighPowerSwitchController::ChannelsPwmIndexes HighPowerSwitchController::getChannelsPwmIndexes()
