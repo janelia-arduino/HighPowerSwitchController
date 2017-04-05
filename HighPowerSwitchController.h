@@ -85,7 +85,9 @@ public:
                         RecursivePwmValues periods,
                         RecursivePwmValues on_durations);
 
-  void addCountCompletedFunctor(const int pwm_index, const Functor0 & functor);
+  void addCountCompletedFunctor(const int pwm_index,
+                                const Functor1<int> & functor,
+                                const int arg=-1);
 
   void stopPwm(const int pwm_index);
   void stopAllPwm();
@@ -118,7 +120,7 @@ private:
   IndexedContainer<high_power_switch_controller::constants::PwmInfo,
                    high_power_switch_controller::constants::INDEXED_PWM_COUNT_MAX> indexed_pwm_;
 
-  const Functor0 functor_dummy_;
+  const Functor1<int> functor_dummy_;
 
   void removeParentAndChildrenPwmInfo(const int pwm_index);
 

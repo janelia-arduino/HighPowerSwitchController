@@ -59,7 +59,8 @@ struct PwmInfo
   long on_duration;
   long count;
   bool stopped_before_count_completed;
-  Functor0 functor_count_completed;
+  Functor1<int> functor_count_completed;
+  int functor_arg;
   EventIdPair event_id_pair;
 };
 

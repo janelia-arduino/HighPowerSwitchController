@@ -558,6 +558,7 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
   pwm_info.count = count;
   pwm_info.stopped_before_count_completed = false;
   pwm_info.functor_count_completed = functor_dummy_;
+  pwm_info.functor_arg = -1;
   int pwm_index = indexed_pwm_.add(pwm_info);
   EventIdPair event_id_pair = event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOnHandler),
                                                                  makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
@@ -628,6 +629,7 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
     }
     pwm_info.stopped_before_count_completed = false;
     pwm_info.functor_count_completed = functor_dummy_;
+    pwm_info.functor_arg = -1;
     pwm_index = indexed_pwm_.add(pwm_info);
   }
 
@@ -657,7 +659,9 @@ int HighPowerSwitchController::startRecursivePwm(const uint32_t channels,
   return addRecursivePwm(channels,delay,periods,on_durations,-1);
 }
 
-void HighPowerSwitchController::addCountCompletedFunctor(const int pwm_index, const Functor0 & functor)
+void HighPowerSwitchController::addCountCompletedFunctor(const int pwm_index,
+                                                         const Functor1<int> & functor,
+                                                         const int arg)
 {
   if (pwm_index < 0)
   {
@@ -667,6 +671,7 @@ void HighPowerSwitchController::addCountCompletedFunctor(const int pwm_index, co
   {
     constants::PwmInfo & pwm_info = indexed_pwm_[pwm_index];
     pwm_info.functor_count_completed = functor;
+    pwm_info.functor_arg = arg;
   }
 }
 
@@ -913,7 +918,8 @@ void HighPowerSwitchController::stopPwmHandler(int pwm_index)
   uint32_t & channels = pwm_info.channels;
   uint8_t & level = pwm_info.level;
   bool stopped_before_count_completed = pwm_info.stopped_before_count_completed;
-  Functor0 functor_count_completed = pwm_info.functor_count_completed;
+  Functor1<int> functor_count_completed = pwm_info.functor_count_completed;
+  int functor_arg = pwm_info.functor_arg;
   if (level == 0)
   {
     setChannelsOff(channels);
@@ -926,7 +932,7 @@ void HighPowerSwitchController::stopPwmHandler(int pwm_index)
   }
   if (!stopped_before_count_completed && functor_count_completed)
   {
-    functor_count_completed();
+    functor_count_completed(functor_arg);
   }
 }
 
