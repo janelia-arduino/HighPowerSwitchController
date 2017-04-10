@@ -706,11 +706,12 @@ void HighPowerSwitchController::addEventUsingDelay(const Functor1<int> & functor
                                                    const uint32_t delay,
                                                    const int arg)
 {
-  if (event_controller_.eventsAvailable() > 0)
+  if (event_controller_.eventsAvailable() == 0)
   {
     return;
   }
-  event_controller_.addEventUsingDelay(functor,delay,arg);
+  EventId event_id = event_controller_.addEventUsingDelay(functor,delay,arg);
+  event_controller_.enable(event_id);
 }
 
 HighPowerSwitchController::ChannelsPwmIndexes HighPowerSwitchController::getChannelsPwmIndexes()
