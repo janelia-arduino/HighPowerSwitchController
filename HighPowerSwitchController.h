@@ -73,17 +73,17 @@ public:
                const long period,
                const long on_duration);
 
-  typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> RecursivePwmIndexes;
+  typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> RecursivePwmValues;
 
   int addRecursivePwm(const uint32_t channels,
                       const long delay,
-                      RecursivePwmIndexes periods,
-                      RecursivePwmIndexes on_durations,
+                      RecursivePwmValues periods,
+                      RecursivePwmValues on_durations,
                       const long count);
   int startRecursivePwm(const uint32_t channels,
                         const long delay,
-                        RecursivePwmIndexes periods,
-                        RecursivePwmIndexes on_durations);
+                        RecursivePwmValues periods,
+                        RecursivePwmValues on_durations);
 
   void addCountCompletedFunctor(const int pwm_index,
                                 const Functor1<int> & functor,
@@ -96,11 +96,11 @@ public:
                           const uint32_t delay,
                           const int arg=-1);
 
-  typedef Array<RecursivePwmIndexes,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmIndexes;
+  typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmIndexes;
   ChannelsPwmIndexes getChannelsPwmIndexes();
 
   uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
-  RecursivePwmIndexes arrayToRecursivePwmIndexes(ArduinoJson::JsonArray & array);
+  RecursivePwmValues arrayToRecursivePwmValues(ArduinoJson::JsonArray & array);
 
   // Handlers
   virtual void startPwmHandler(int pwm_index);
