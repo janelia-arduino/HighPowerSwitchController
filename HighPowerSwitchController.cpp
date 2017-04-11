@@ -584,8 +584,8 @@ int HighPowerSwitchController::startPwm(const uint32_t channels,
 
 int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
                                                const long delay,
-                                               RecursivePwmValues periods,
-                                               RecursivePwmValues on_durations,
+                                               RecursivePwmIndexes periods,
+                                               RecursivePwmIndexes on_durations,
                                                const long count)
 {
   if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
@@ -653,8 +653,8 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
 
 int HighPowerSwitchController::startRecursivePwm(const uint32_t channels,
                                                  const long delay,
-                                                 RecursivePwmValues periods,
-                                                 RecursivePwmValues on_durations)
+                                                 RecursivePwmIndexes periods,
+                                                 RecursivePwmIndexes on_durations)
 {
   return addRecursivePwm(channels,delay,periods,on_durations,-1);
 }
@@ -720,7 +720,7 @@ HighPowerSwitchController::ChannelsPwmIndexes HighPowerSwitchController::getChan
   noInterrupts();
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
   {
-    RecursivePwmValues channel_pwm_indexes(channels_pwm_indexes_[channel]);
+    RecursivePwmIndexes channel_pwm_indexes(channels_pwm_indexes_[channel]);
     channels_pwm_indexes.push_back(channel_pwm_indexes);
   }
   interrupts();
@@ -741,9 +741,9 @@ uint32_t HighPowerSwitchController::arrayToChannels(ArduinoJson::JsonArray & cha
   return channels;
 }
 
-HighPowerSwitchController::RecursivePwmValues HighPowerSwitchController::arrayToRecursivePwmValues(ArduinoJson::JsonArray & array)
+HighPowerSwitchController::RecursivePwmIndexes HighPowerSwitchController::arrayToRecursivePwmIndexes(ArduinoJson::JsonArray & array)
 {
-  RecursivePwmValues pwm_values;
+  RecursivePwmIndexes pwm_values;
   for (ArduinoJson::JsonArray::iterator array_it=array.begin();
        array_it != array.end();
        ++array_it)
@@ -1237,8 +1237,8 @@ void HighPowerSwitchController::addRecursivePwmHandler()
   long count;
   modular_server_.parameter(constants::count_parameter_name).getValue(count);
   const uint32_t channels = arrayToChannels(*channels_array_ptr);
-  RecursivePwmValues periods = arrayToRecursivePwmValues(*periods_array_ptr);
-  RecursivePwmValues on_durations = arrayToRecursivePwmValues(*on_durations_array_ptr);
+  RecursivePwmIndexes periods = arrayToRecursivePwmIndexes(*periods_array_ptr);
+  RecursivePwmIndexes on_durations = arrayToRecursivePwmIndexes(*on_durations_array_ptr);
   int pwm_index = addRecursivePwm(channels,delay,periods,on_durations,count);
   returnPwmIndexResponse(pwm_index);
 }
