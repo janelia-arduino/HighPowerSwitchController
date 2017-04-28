@@ -8,7 +8,11 @@ License:
 
     BSD
 
-[Examples](./examples)
+## Inherits
+
+[ModularServer](https://github.com/janelia-arduino/ModularServer)
+
+[ModularDeviceBase](https://github.com/janelia-arduino/ModularDeviceBase)
 
 ## API
 
@@ -27,8 +31,10 @@ License:
       "getPowersWhenOn",
       "getPowers",
       "setChannelOn",
+      "setChannelOnAtPower",
       "setChannelOff",
       "setChannelsOn",
+      "setChannelsOnAtPower",
       "setChannelsOff",
       "toggleChannel",
       "toggleChannels",
