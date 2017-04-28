@@ -700,6 +700,7 @@ void HighPowerSwitchController::stopAllPwm()
     stopPwm(i);
   }
   event_controller_.removeAllEvents();
+  indexed_pwm_.clear();
 }
 
 void HighPowerSwitchController::addEventUsingDelay(const Functor1<int> & functor,
@@ -758,8 +759,11 @@ void HighPowerSwitchController::removeParentAndChildrenPwmInfo(const int pwm_ind
 {
   if (pwm_index >= 0)
   {
-    removeParentAndChildrenPwmInfo(indexed_pwm_[pwm_index].child_index);
-    indexed_pwm_.remove(pwm_index);
+    if (indexed_pwm_.indexHasValue(pwm_index))
+    {
+      removeParentAndChildrenPwmInfo(indexed_pwm_[pwm_index].child_index);
+      indexed_pwm_.remove(pwm_index);
+    }
   }
 }
 
