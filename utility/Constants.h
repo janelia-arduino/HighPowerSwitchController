@@ -20,7 +20,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=1};
 enum{PARAMETER_COUNT_MAX=12};
-enum{FUNCTION_COUNT_MAX=33};
+enum{FUNCTION_COUNT_MAX=35};
 enum{CALLBACK_COUNT_MAX=1};
 
 enum
@@ -124,8 +124,10 @@ extern ConstantString set_all_powers_when_on_function_name;
 extern ConstantString get_powers_when_on_function_name;
 extern ConstantString get_powers_function_name;
 extern ConstantString set_channel_on_function_name;
+extern ConstantString set_channel_on_at_power_function_name;
 extern ConstantString set_channel_off_function_name;
 extern ConstantString set_channels_on_function_name;
+extern ConstantString set_channels_on_at_power_function_name;
 extern ConstantString set_channels_off_function_name;
 extern ConstantString toggle_channel_function_name;
 extern ConstantString toggle_channels_function_name;

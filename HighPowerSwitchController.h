@@ -41,14 +41,19 @@ public:
   void disableAll();
   bool enabled();
 
-  long setPowerWhenOn(const size_t channel, const long power);
+  long setPowerWhenOn(const size_t channel,
+                      const long power);
   long getPowerWhenOn(const size_t channel);
   long getPower(const size_t channel);
 
   void setChannels(const uint32_t channels);
   void setChannelOn(const size_t channel);
+  void setChannelOnAtPower(const size_t channel,
+                           const long power);
   void setChannelOff(const size_t channel);
   void setChannelsOn(const uint32_t channels);
+  void setChannelsOnAtPower(const uint32_t channels,
+                            const long power);
   void setChannelsOff(const uint32_t channels);
   void toggleChannel(const size_t channel);
   void toggleChannels(const uint32_t channels);
@@ -116,6 +121,7 @@ private:
 
   bool enabled_;
   uint32_t channels_;
+  long powers_when_on_[high_power_switch_controller::constants::CHANNEL_COUNT];
   long powers_[high_power_switch_controller::constants::CHANNEL_COUNT];
   long channels_pwm_indexes_[high_power_switch_controller::constants::CHANNEL_COUNT][high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX];
 
@@ -153,8 +159,10 @@ private:
   void getPowersWhenOnHandler();
   void getPowersHandler();
   void setChannelOnHandler();
+  void setChannelOnAtPowerHandler();
   void setChannelOffHandler();
   void setChannelsOnHandler();
+  void setChannelsOnAtPowerHandler();
   void setChannelsOffHandler();
   void toggleChannelHandler();
   void toggleChannelsHandler();
