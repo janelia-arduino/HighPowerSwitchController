@@ -24,6 +24,8 @@
 
 #include "EventController.h"
 
+#include "ModularClient.h"
+
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
 
