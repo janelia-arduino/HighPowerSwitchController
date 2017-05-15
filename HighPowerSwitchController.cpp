@@ -125,31 +125,35 @@ void HighPowerSwitchController::setup()
 
   modular_server::Function & enabled_function = modular_server_.createFunction(constants::enabled_function_name);
   enabled_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::enabledHandler));
-  enabled_function.setReturnTypeBool();
+  enabled_function.setResultTypeBool();
 
   modular_server::Function & set_power_when_on_function = modular_server_.createFunction(constants::set_power_when_on_function_name);
   set_power_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setPowerWhenOnHandler));
   set_power_when_on_function.addParameter(channel_parameter);
   set_power_when_on_function.addParameter(power_parameter);
-  set_power_when_on_function.setReturnTypeLong();
+  set_power_when_on_function.setResultTypeLong();
 
   modular_server::Function & set_powers_when_on_function = modular_server_.createFunction(constants::set_powers_when_on_function_name);
   set_powers_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setPowersWhenOnHandler));
   set_powers_when_on_function.addParameter(powers_parameter);
-  set_powers_when_on_function.setReturnTypeArray();
+  set_powers_when_on_function.setResultTypeArray();
+  set_powers_when_on_function.setResultTypeLong();
 
   modular_server::Function & set_all_powers_when_on_function = modular_server_.createFunction(constants::set_all_powers_when_on_function_name);
   set_all_powers_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setAllPowersWhenOnHandler));
   set_all_powers_when_on_function.addParameter(power_parameter);
-  set_all_powers_when_on_function.setReturnTypeArray();
+  set_all_powers_when_on_function.setResultTypeArray();
+  set_all_powers_when_on_function.setResultTypeLong();
 
   modular_server::Function & get_powers_when_on_function = modular_server_.createFunction(constants::get_powers_when_on_function_name);
   get_powers_when_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPowersWhenOnHandler));
-  get_powers_when_on_function.setReturnTypeArray();
+  get_powers_when_on_function.setResultTypeArray();
+  get_powers_when_on_function.setResultTypeLong();
 
   modular_server::Function & get_powers_function = modular_server_.createFunction(constants::get_powers_function_name);
   get_powers_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPowersHandler));
-  get_powers_function.setReturnTypeArray();
+  get_powers_function.setResultTypeArray();
+  get_powers_function.setResultTypeLong();
 
   modular_server::Function & set_channel_on_function = modular_server_.createFunction(constants::set_channel_on_function_name);
   set_channel_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::setChannelOnHandler));
@@ -213,15 +217,17 @@ void HighPowerSwitchController::setup()
   modular_server::Function & channel_is_on_function = modular_server_.createFunction(constants::channel_is_on_function_name);
   channel_is_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::channelIsOnHandler));
   channel_is_on_function.addParameter(channel_parameter);
-  channel_is_on_function.setReturnTypeBool();
+  channel_is_on_function.setResultTypeBool();
 
   modular_server::Function & get_channels_on_function = modular_server_.createFunction(constants::get_channels_on_function_name);
   get_channels_on_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelsOnHandler));
-  get_channels_on_function.setReturnTypeArray();
+  get_channels_on_function.setResultTypeArray();
+  get_channels_on_function.setResultTypeLong();
 
   modular_server::Function & get_channels_off_function = modular_server_.createFunction(constants::get_channels_off_function_name);
   get_channels_off_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelsOffHandler));
-  get_channels_off_function.setReturnTypeArray();
+  get_channels_off_function.setResultTypeArray();
+  get_channels_off_function.setResultTypeLong();
 
   modular_server::Function & get_channel_count_function = modular_server_.createFunction(constants::get_channel_count_function_name);
   get_channel_count_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelCountHandler));
@@ -233,7 +239,7 @@ void HighPowerSwitchController::setup()
   add_pwm_function.addParameter(period_parameter);
   add_pwm_function.addParameter(on_duration_parameter);
   add_pwm_function.addParameter(count_parameter);
-  add_pwm_function.setReturnTypeLong();
+  add_pwm_function.setResultTypeLong();
 
   modular_server::Function & start_pwm_function = modular_server_.createFunction(constants::start_pwm_function_name);
   start_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::startPwmHandler));
@@ -241,7 +247,7 @@ void HighPowerSwitchController::setup()
   start_pwm_function.addParameter(delay_parameter);
   start_pwm_function.addParameter(period_parameter);
   start_pwm_function.addParameter(on_duration_parameter);
-  start_pwm_function.setReturnTypeLong();
+  start_pwm_function.setResultTypeLong();
 
   modular_server::Function & add_recursive_pwm_function = modular_server_.createFunction(constants::add_recursive_pwm_function_name);
   add_recursive_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::addRecursivePwmHandler));
@@ -250,7 +256,7 @@ void HighPowerSwitchController::setup()
   add_recursive_pwm_function.addParameter(periods_parameter);
   add_recursive_pwm_function.addParameter(on_durations_parameter);
   add_recursive_pwm_function.addParameter(count_parameter);
-  add_recursive_pwm_function.setReturnTypeLong();
+  add_recursive_pwm_function.setResultTypeLong();
 
   modular_server::Function & start_recursive_pwm_function = modular_server_.createFunction(constants::start_recursive_pwm_function_name);
   start_recursive_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::startRecursivePwmHandler));
@@ -258,7 +264,7 @@ void HighPowerSwitchController::setup()
   start_recursive_pwm_function.addParameter(delay_parameter);
   start_recursive_pwm_function.addParameter(periods_parameter);
   start_recursive_pwm_function.addParameter(on_durations_parameter);
-  start_recursive_pwm_function.setReturnTypeLong();
+  start_recursive_pwm_function.setResultTypeLong();
 
   modular_server::Function & stop_pwm_function = modular_server_.createFunction(constants::stop_pwm_function_name);
   stop_pwm_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::stopPwmHandler));
@@ -269,11 +275,13 @@ void HighPowerSwitchController::setup()
 
   modular_server::Function & get_channels_pwm_indexes_function = modular_server_.createFunction(constants::get_channels_pwm_indexes_function_name);
   get_channels_pwm_indexes_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getChannelsPwmIndexesHandler));
-  get_channels_pwm_indexes_function.setReturnTypeArray();
+  get_channels_pwm_indexes_function.setResultTypeArray();
+  get_channels_pwm_indexes_function.setResultTypeLong();
 
   modular_server::Function & get_pwm_info_function = modular_server_.createFunction(constants::get_pwm_info_function_name);
   get_pwm_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&HighPowerSwitchController::getPwmInfoHandler));
-  get_pwm_info_function.setReturnTypeArray();
+  get_pwm_info_function.setResultTypeArray();
+  get_pwm_info_function.setResultTypeObject();
 
   // Callbacks
 
