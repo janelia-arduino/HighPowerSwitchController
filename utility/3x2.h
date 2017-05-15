@@ -31,7 +31,7 @@ extern const size_t enable_pins[CHANNEL_COUNT];
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
-extern const double steps_per_position_unit_default[CHANNEL_COUNT];
+extern const double steps_per_position_units_default[CHANNEL_COUNT];
 
 extern const double velocity_max_default[CHANNEL_COUNT];
 

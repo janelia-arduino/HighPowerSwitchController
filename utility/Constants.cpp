@@ -42,8 +42,8 @@ CONSTANT_STRING(child_index_string,"child_index");
 // Interrupts
 
 // Units
-CONSTANT_STRING(ms_unit,"ms");
-CONSTANT_STRING(percent_unit,"%");
+CONSTANT_STRING(ms_units,"ms");
+CONSTANT_STRING(percent_units,"%");
 
 // Properties
 CONSTANT_STRING(power_max_property_name,"powerMax");

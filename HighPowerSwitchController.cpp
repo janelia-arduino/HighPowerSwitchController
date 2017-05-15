@@ -60,7 +60,7 @@ void HighPowerSwitchController::setup()
   // Properties
   modular_server::Property & power_max_property = modular_server_.createProperty(constants::power_max_property_name,constants::power_max_default);
   power_max_property.setRange(constants::power_min,constants::power_max);
-  power_max_property.setUnits(constants::percent_unit);
+  power_max_property.setUnits(constants::percent_units);
   power_max_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&HighPowerSwitchController::setPowerMaxHandler));
 
   setPowersToMax();
@@ -75,28 +75,28 @@ void HighPowerSwitchController::setup()
 
   modular_server::Parameter & power_parameter = modular_server_.createParameter(constants::power_parameter_name);
   power_parameter.setRange(constants::power_min,constants::power_max);
-  power_parameter.setUnits(constants::percent_unit);
+  power_parameter.setUnits(constants::percent_units);
 
   modular_server::Parameter & powers_parameter = modular_server_.createParameter(constants::powers_parameter_name);
   powers_parameter.setRange(constants::power_min,constants::power_max);
   powers_parameter.setArrayLengthRange(constants::CHANNEL_COUNT,constants::CHANNEL_COUNT);
-  powers_parameter.setUnits(constants::percent_unit);
+  powers_parameter.setUnits(constants::percent_units);
 
   modular_server::Parameter & delay_parameter = modular_server_.createParameter(constants::delay_parameter_name);
   delay_parameter.setRange(constants::delay_min,constants::delay_max);
-  delay_parameter.setUnits(constants::ms_unit);
+  delay_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & period_parameter = modular_server_.createParameter(constants::period_parameter_name);
   period_parameter.setRange(constants::period_min,constants::period_max);
-  period_parameter.setUnits(constants::ms_unit);
+  period_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & on_duration_parameter = modular_server_.createParameter(constants::on_duration_parameter_name);
   on_duration_parameter.setRange(constants::on_duration_min,constants::on_duration_max);
-  on_duration_parameter.setUnits(constants::ms_unit);
+  on_duration_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & count_parameter = modular_server_.createParameter(constants::count_parameter_name);
   count_parameter.setRange(constants::count_min,constants::count_max);
-  count_parameter.setUnits(constants::ms_unit);
+  count_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & pwm_index_parameter = modular_server_.createParameter(constants::pwm_index_parameter_name);
   pwm_index_parameter.setRange(0,constants::INDEXED_PWM_COUNT_MAX-1);
@@ -104,17 +104,17 @@ void HighPowerSwitchController::setup()
   // modular_server::Parameter & delays_parameter = modular_server_.createParameter(constants::delays_parameter_name);
   // delays_parameter.setRange(constants::delay_min,constants::delay_max);
   // delays_parameter.setArrayLengthRange(1,constants::PWM_LEVEL_COUNT_MAX);
-  // delays_parameter.setUnits(constants::ms_unit);
+  // delays_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & periods_parameter = modular_server_.createParameter(constants::periods_parameter_name);
   periods_parameter.setRange(constants::period_min,constants::period_max);
   periods_parameter.setArrayLengthRange(1,constants::PWM_LEVEL_COUNT_MAX);
-  periods_parameter.setUnits(constants::ms_unit);
+  periods_parameter.setUnits(constants::ms_units);
 
   modular_server::Parameter & on_durations_parameter = modular_server_.createParameter(constants::on_durations_parameter_name);
   on_durations_parameter.setRange(constants::on_duration_min,constants::on_duration_max);
   on_durations_parameter.setArrayLengthRange(1,constants::PWM_LEVEL_COUNT_MAX);
-  on_durations_parameter.setUnits(constants::ms_unit);
+  on_durations_parameter.setUnits(constants::ms_units);
 
   // Functions
   modular_server::Function & enable_all_function = modular_server_.createFunction(constants::enable_all_function_name);

@@ -30,11 +30,11 @@ const size_t enable_pins[CHANNEL_COUNT] = {2,3,4};
 // Units
 
 // Properties
-const double steps_per_position_unit_default[CHANNEL_COUNT] =
+const double steps_per_position_units_default[CHANNEL_COUNT] =
   {
-    steps_per_position_unit_element_default,
-    steps_per_position_unit_element_default,
-    steps_per_position_unit_element_default,
+    steps_per_position_units_element_default,
+    steps_per_position_units_element_default,
+    steps_per_position_units_element_default,
   };
 
 const double velocity_max_default[CHANNEL_COUNT] =
