@@ -748,7 +748,11 @@ void HighPowerSwitchController::stopAllPwm()
   {
     stopPwm(i);
   }
+  Serial << "eventsActive = " << event_controller_.eventsActive() << "\n";
+  Serial << "eventsAvailable = " << event_controller_.eventsAvailable() << "\n";
   event_controller_.removeAllEvents();
+  Serial << "eventsActive = " << event_controller_.eventsActive() << "\n";
+  Serial << "eventsAvailable = " << event_controller_.eventsAvailable() << "\n";
   indexed_pwm_.clear();
 }
 
