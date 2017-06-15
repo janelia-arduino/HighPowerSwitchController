@@ -89,7 +89,7 @@ License:
 
 ## API Verbose
 
-[API Verbose](./api.json)
+[API Verbose](./api/)
 
 ## More Detailed Modular Device Information
 
