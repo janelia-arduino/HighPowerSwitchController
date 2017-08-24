@@ -19,35 +19,21 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{INTERRUPT_COUNT_MAX=1};
 
-enum {CONTROLLER_COUNT=1};
-// CHANNEL_COUNT = CONTROLLER_COUNT*CHANNELS_PER_CONTROLLER_COUNT
-// CHANNELS_PER_CONTROLLER_COUNT = 3
-enum {CHANNEL_COUNT=3};
+enum {CHANNEL_COUNT=2};
 
-extern const size_t cs_pins[CONTROLLER_COUNT];
-extern const size_t enable_pins[CHANNEL_COUNT];
+enum{EVENT_COUNT_MAX=36};
+enum{INDEXED_PWM_COUNT_MAX=16};
+
+enum{PWM_LEVEL_COUNT_MAX=4};
+
+extern const size_t signal_pins[CHANNEL_COUNT];
+extern const size_t fault_pins[CHANNEL_COUNT];
 
 // Units
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
-extern const double steps_per_position_units_default[CHANNEL_COUNT];
-
-extern const double velocity_max_default[CHANNEL_COUNT];
-
-extern const double velocity_min_default[CHANNEL_COUNT];
-
-extern const double acceleration_max_default[CHANNEL_COUNT];
-
-extern const ConstantString * const enable_polarity_default[CHANNEL_COUNT];
-
-extern const bool left_switch_stop_enabled_default[CHANNEL_COUNT];
-
-extern const bool right_switch_stop_enabled_default[CHANNEL_COUNT];
-
-extern const bool switch_soft_stop_enabled_default[CHANNEL_COUNT];
-
-extern const double home_velocity_default[CHANNEL_COUNT];
+extern const long power_max_default[CHANNEL_COUNT];
 
 // Parameters
 
