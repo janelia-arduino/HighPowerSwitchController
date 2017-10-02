@@ -7,10 +7,10 @@
 // ----------------------------------------------------------------------------
 #ifndef HIGH_POWER_SWITCH_CONTROLLER_CONSTANTS_H
 #define HIGH_POWER_SWITCH_CONTROLLER_CONSTANTS_H
-#include "ConstantVariable.h"
-#include "ModularServer.h"
+#include <ConstantVariable.h>
+#include <ModularServer.h>
 
-#include "EventController.h"
+#include <EventController.h>
 
 
 namespace high_power_switch_controller

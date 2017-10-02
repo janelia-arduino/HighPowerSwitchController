@@ -5,7 +5,7 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "HighPowerSwitchController.h"
+#include "../HighPowerSwitchController.h"
 
 
 using namespace high_power_switch_controller;
