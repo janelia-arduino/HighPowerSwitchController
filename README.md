@@ -26,11 +26,13 @@ License:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["HighPowerSwitchController"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "HighPowerSwitchController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "enableAll",
       "disableAll",
       "enabled",
@@ -67,7 +69,7 @@ License:
       "getChannelsPwmIndexes",
       "getPwmInfo"
     ],
-    "parameters":[
+    "parameters": [
       "channel",
       "channels",
       "power",
@@ -80,7 +82,7 @@ License:
       "periods",
       "on_durations"
     ],
-    "properties":[
+    "properties": [
       "powerMax"
     ]
   }
