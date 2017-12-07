@@ -24,6 +24,9 @@ void HighPowerSwitchController::setup()
   // Parent Setup
   ModularDeviceBase::setup();
 
+  // Reset Watchdog
+  resetWatchdog();
+
   // Event Controller Setup
   event_controller_.setup();
 
