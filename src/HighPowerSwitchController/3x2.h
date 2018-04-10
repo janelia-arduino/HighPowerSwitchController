@@ -17,7 +17,7 @@ namespace high_power_switch_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{INTERRUPT_COUNT_MAX=1};
+enum{PIN_COUNT_MAX=1};
 
 enum {CHANNEL_COUNT=2};
 

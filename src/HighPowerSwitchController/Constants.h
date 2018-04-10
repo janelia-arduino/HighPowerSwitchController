@@ -24,13 +24,13 @@ enum{FUNCTION_COUNT_MAX=35};
 enum{CALLBACK_COUNT_MAX=1};
 
 enum
-  {
-    PWM_NOT_RUNNING_INDEX=-1,
-    NO_PWM_AVAILABLE_INDEX=-2,
-    NO_CHILD_PWM_INDEX=-3,
-    PWM_ARRAY_LENGTHS_NOT_EQUAL_INDEX=-4,
-    PWM_ARRAY_LENGTHS_ARE_ZERO_INDEX=-5,
-  };
+{
+  PWM_NOT_RUNNING_INDEX=-1,
+  NO_PWM_AVAILABLE_INDEX=-2,
+  NO_CHILD_PWM_INDEX=-3,
+  PWM_ARRAY_LENGTHS_NOT_EQUAL_INDEX=-4,
+  PWM_ARRAY_LENGTHS_ARE_ZERO_INDEX=-5,
+};
 
 extern ConstantString device_name;
 
@@ -69,7 +69,7 @@ extern ConstantString level_string;
 extern ConstantString top_level_string;
 extern ConstantString child_index_string;
 
-// Interrupts
+// Pins
 
 // Units
 extern ConstantString ms_units;

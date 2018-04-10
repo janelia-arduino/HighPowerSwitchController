@@ -105,7 +105,7 @@ public:
   virtual void stopPwmHandler(int pwm_index);
 
 private:
-  modular_server::Interrupt interrupts_[high_power_switch_controller::constants::INTERRUPT_COUNT_MAX];
+  modular_server::Pin pins_[high_power_switch_controller::constants::PIN_COUNT_MAX];
 
   modular_server::Property properties_[high_power_switch_controller::constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[high_power_switch_controller::constants::PARAMETER_COUNT_MAX];
