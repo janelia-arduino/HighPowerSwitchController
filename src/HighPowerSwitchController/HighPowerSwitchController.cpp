@@ -386,6 +386,11 @@ void HighPowerSwitchController::setChannelOn(const size_t channel)
     noInterrupts();
     long power = powers_when_on_[channel];
     interrupts();
+    if (power == 0)
+    {
+      setChannelOff(channel);
+      return;
+    }
     long analog_write_value = powerToAnalogWriteValue(power);
 
     noInterrupts();
@@ -404,6 +409,11 @@ void HighPowerSwitchController::setChannelOnAtPower(const size_t channel,
     uint32_t bit = 1;
     bit = bit << channel;
 
+    if (power == 0)
+    {
+      setChannelOff(channel);
+      return;
+    }
     long analog_write_value = powerToAnalogWriteValue(power);
 
     noInterrupts();
