@@ -3,98 +3,106 @@
 #+EMAIL: peterpolidoro@gmail.com
 
 * Library Information
-  - Author :: Peter Polidoro
+  - Name :: HighPowerSwitchController
+  - Version :: 1.0.4
   - License :: BSD
+  - URL :: https://github.com/janelia-arduino/HighPowerSwitchController
+  - Author :: Peter Polidoro
+  - Email :: peterpolidoro@gmail.com
+
+** Description
+
+   Modular device high power switch controller library.
+
+* API NAMES
+
+  #+BEGIN_SRC js
+    {
+      "id": "getApi",
+      "result": {
+        "firmware": [
+          "HighPowerSwitchController"
+        ],
+        "verbosity": "NAMES",
+        "functions": [
+          "enableAll",
+          "disableAll",
+          "enabled",
+          "setPowerWhenOn",
+          "setPowersWhenOn",
+          "setAllPowersWhenOn",
+          "getPowersWhenOn",
+          "getPowers",
+          "setChannelOn",
+          "setChannelOnAtPower",
+          "setChannelOff",
+          "setChannelsOn",
+          "setChannelsOnAtPower",
+          "setChannelsOff",
+          "toggleChannel",
+          "toggleChannels",
+          "toggleAllChannels",
+          "setAllChannelsOn",
+          "setAllChannelsOff",
+          "setChannelOnAllOthersOff",
+          "setChannelOffAllOthersOn",
+          "setChannelsOnAllOthersOff",
+          "setChannelsOffAllOthersOn",
+          "channelIsOn",
+          "getChannelsOn",
+          "getChannelsOff",
+          "getChannelCount",
+          "addPwm",
+          "startPwm",
+          "addRecursivePwm",
+          "startRecursivePwm",
+          "stopPwm",
+          "stopAllPwm",
+          "getChannelsPwmIndexes",
+          "getPwmInfo"
+        ],
+        "parameters": [
+          "channel",
+          "channels",
+          "power",
+          "powers",
+          "delay",
+          "period",
+          "on_duration",
+          "count",
+          "pwm_index",
+          "periods",
+          "on_durations"
+        ],
+        "properties": [
+          "powerMax"
+        ]
+      }
+    }
+  #+END_SRC
+
+* API GENERAL
+
+  [[./api/]]
 
 * Ancestors
 
-  [[https://github.com/janelia-arduino/ModularServer][ModularServer]]
+  [[https://github.com/janelia-arduino/ModularServer]]
 
-  [[https://github.com/janelia-arduino/ModularDeviceBase][ModularDeviceBase]]
+  [[https://github.com/janelia-arduino/ModularDeviceBase]]
 
 * Clients
 
 * Devices
 
-  [[https://github.com/janelia-modular-devices/modular_device_base.git][modular_device_base]]
+  [[https://github.com/janelia-modular-devices/modular_device_base.git]]
 
-  [[https://github.com/janelia-modular-devices/high_power_switch_controller.git][high_power_switch_controller]]
-
-* API NAMES
-
-  #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "HighPowerSwitchController"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "enableAll",
-      "disableAll",
-      "enabled",
-      "setPowerWhenOn",
-      "setPowersWhenOn",
-      "setAllPowersWhenOn",
-      "getPowersWhenOn",
-      "getPowers",
-      "setChannelOn",
-      "setChannelOnAtPower",
-      "setChannelOff",
-      "setChannelsOn",
-      "setChannelsOnAtPower",
-      "setChannelsOff",
-      "toggleChannel",
-      "toggleChannels",
-      "toggleAllChannels",
-      "setAllChannelsOn",
-      "setAllChannelsOff",
-      "setChannelOnAllOthersOff",
-      "setChannelOffAllOthersOn",
-      "setChannelsOnAllOthersOff",
-      "setChannelsOffAllOthersOn",
-      "channelIsOn",
-      "getChannelsOn",
-      "getChannelsOff",
-      "getChannelCount",
-      "addPwm",
-      "startPwm",
-      "addRecursivePwm",
-      "startRecursivePwm",
-      "stopPwm",
-      "stopAllPwm",
-      "getChannelsPwmIndexes",
-      "getPwmInfo"
-    ],
-    "parameters": [
-      "channel",
-      "channels",
-      "power",
-      "powers",
-      "delay",
-      "period",
-      "on_duration",
-      "count",
-      "pwm_index",
-      "periods",
-      "on_durations"
-    ],
-    "properties": [
-      "powerMax"
-    ]
-  }
-}
-  #+END_SRC
-
-* API GENERAL
-
-  [[./api/][API GENERAL]]
+  [[https://github.com/janelia-modular-devices/high_power_switch_controller.git]]
 
 * More Detailed Modular Device Information
 
-  [[https://github.com/janelia-modular-devices/modular-devices][modular-devices]]
+  [[https://github.com/janelia-modular-devices/modular-devices]]
 
-* Library Dependencies
+* Installation Instructions
 
-  [[https://github.com/janelia-arduino/arduino-libraries][arduino-libraries]]
+  [[https://github.com/janelia-arduino/arduino-libraries]]
