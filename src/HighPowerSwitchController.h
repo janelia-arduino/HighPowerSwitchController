@@ -35,18 +35,18 @@ public:
   bool enabled();
 
   long setPowerWhenOn(const size_t channel,
-                      const long power);
+    const long power);
   long getPowerWhenOn(const size_t channel);
   long getPower(const size_t channel);
 
   void setChannels(const uint32_t channels);
   void setChannelOn(const size_t channel);
   void setChannelOnAtPower(const size_t channel,
-                           const long power);
+    const long power);
   void setChannelOff(const size_t channel);
   void setChannelsOn(const uint32_t channels);
   void setChannelsOnAtPower(const uint32_t channels,
-                            const long power);
+    const long power);
   void setChannelsOff(const uint32_t channels);
   void toggleChannel(const size_t channel);
   void toggleChannels(const uint32_t channels);
@@ -62,37 +62,37 @@ public:
   size_t getChannelCount();
 
   int addPwm(const uint32_t channels,
-             const long delay,
-             const long period,
-             const long on_duration,
-             const long count);
+    const long delay,
+    const long period,
+    const long on_duration,
+    const long count);
   int startPwm(const uint32_t channels,
-               const long delay,
-               const long period,
-               const long on_duration);
+    const long delay,
+    const long period,
+    const long on_duration);
 
   typedef Array<long,high_power_switch_controller::constants::PWM_LEVEL_COUNT_MAX> RecursivePwmValues;
 
   int addRecursivePwm(const uint32_t channels,
-                      const long delay,
-                      RecursivePwmValues periods,
-                      RecursivePwmValues on_durations,
-                      const long count);
+    const long delay,
+    RecursivePwmValues periods,
+    RecursivePwmValues on_durations,
+    const long count);
   int startRecursivePwm(const uint32_t channels,
-                        const long delay,
-                        RecursivePwmValues periods,
-                        RecursivePwmValues on_durations);
+    const long delay,
+    RecursivePwmValues periods,
+    RecursivePwmValues on_durations);
 
   void addCountCompletedFunctor(const int pwm_index,
-                                const Functor1<int> & functor,
-                                const int arg=-1);
+    const Functor1<int> & functor,
+    const int arg=-1);
 
   void stopPwm(const int pwm_index);
   void stopAllPwm();
 
   void addEventUsingDelay(const Functor1<int> & functor,
-                          const uint32_t delay,
-                          const int arg=-1);
+    const uint32_t delay,
+    const int arg=-1);
 
   typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmIndexes;
   ChannelsPwmIndexes getChannelsPwmIndexes();
@@ -121,7 +121,7 @@ private:
   EventController<high_power_switch_controller::constants::EVENT_COUNT_MAX> event_controller_;
 
   IndexedContainer<high_power_switch_controller::constants::PwmInfo,
-                   high_power_switch_controller::constants::INDEXED_PWM_COUNT_MAX> indexed_pwm_;
+    high_power_switch_controller::constants::INDEXED_PWM_COUNT_MAX> indexed_pwm_;
 
   const Functor1<int> functor_dummy_;
 

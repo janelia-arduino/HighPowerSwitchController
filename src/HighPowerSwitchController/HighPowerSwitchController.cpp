@@ -52,14 +52,14 @@ void HighPowerSwitchController::setup()
 
   // Add Hardware
   modular_server_.addHardware(constants::hardware_info,
-                              pins_);
+    pins_);
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
-                              properties_,
-                              parameters_,
-                              functions_,
-                              callbacks_);
+    properties_,
+    parameters_,
+    functions_,
+    callbacks_);
   // Properties
   modular_server::Property & power_max_property = modular_server_.createProperty(constants::power_max_property_name,constants::power_max_default);
   power_max_property.setRange(constants::power_min,constants::power_max);
@@ -308,7 +308,7 @@ bool HighPowerSwitchController::enabled()
 }
 
 long HighPowerSwitchController::setPowerWhenOn(const size_t channel,
-                                               const long power)
+  const long power)
 {
   long power_to_set = 0;
   if (channel < constants::CHANNEL_COUNT)
@@ -402,7 +402,7 @@ void HighPowerSwitchController::setChannelOn(const size_t channel)
 }
 
 void HighPowerSwitchController::setChannelOnAtPower(const size_t channel,
-                                                    const long power)
+  const long power)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -452,7 +452,7 @@ void HighPowerSwitchController::setChannelsOn(const uint32_t channels)
 }
 
 void HighPowerSwitchController::setChannelsOnAtPower(const uint32_t channels,
-                                                     const long power)
+  const long power)
 {
   uint32_t bit = 1;
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
@@ -599,10 +599,10 @@ size_t HighPowerSwitchController::getChannelCount()
 }
 
 int HighPowerSwitchController::addPwm(const uint32_t channels,
-                                      const long delay,
-                                      const long period,
-                                      const long on_duration,
-                                      const long count)
+  const long delay,
+  const long period,
+  const long on_duration,
+  const long count)
 {
   if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
   {
@@ -623,12 +623,12 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
   pwm_info.functor_arg = -1;
   int pwm_index = indexed_pwm_.add(pwm_info);
   EventIdPair event_id_pair = event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOnHandler),
-                                                                 makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
-                                                                 delay,
-                                                                 period,
-                                                                 on_duration,
-                                                                 count,
-                                                                 pwm_index);
+    makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::setChannelsOffHandler),
+    delay,
+    period,
+    on_duration,
+    count,
+    pwm_index);
   event_controller_.addStartFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startPwmHandler));
   event_controller_.addStopFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopPwmHandler));
   indexed_pwm_[pwm_index].event_id_pair = event_id_pair;
@@ -637,18 +637,18 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
 }
 
 int HighPowerSwitchController::startPwm(const uint32_t channels,
-                                        const long delay,
-                                        const long period,
-                                        const long on_duration)
+  const long delay,
+  const long period,
+  const long on_duration)
 {
   return addPwm(channels,delay,period,on_duration,-1);
 }
 
 int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
-                                               const long delay,
-                                               RecursivePwmValues periods,
-                                               RecursivePwmValues on_durations,
-                                               const long count)
+  const long delay,
+  RecursivePwmValues periods,
+  RecursivePwmValues on_durations,
+  const long count)
 {
   if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
   {
@@ -698,12 +698,12 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
   if (pwm_index != constants::NO_CHILD_PWM_INDEX)
   {
     EventIdPair event_id_pair = event_controller_.addPwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startRecursivePwmHandler),
-                                                                   makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopRecursivePwmHandler),
-                                                                   delay,
-                                                                   pwm_info.period,
-                                                                   pwm_info.on_duration,
-                                                                   count,
-                                                                   pwm_index);
+      makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopRecursivePwmHandler),
+      delay,
+      pwm_info.period,
+      pwm_info.on_duration,
+      count,
+      pwm_index);
     event_controller_.addStartFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startPwmHandler));
     event_controller_.addStopFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopPwmHandler));
     indexed_pwm_[pwm_index].event_id_pair = event_id_pair;
@@ -714,16 +714,16 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
 }
 
 int HighPowerSwitchController::startRecursivePwm(const uint32_t channels,
-                                                 const long delay,
-                                                 RecursivePwmValues periods,
-                                                 RecursivePwmValues on_durations)
+  const long delay,
+  RecursivePwmValues periods,
+  RecursivePwmValues on_durations)
 {
   return addRecursivePwm(channels,delay,periods,on_durations,-1);
 }
 
 void HighPowerSwitchController::addCountCompletedFunctor(const int pwm_index,
-                                                         const Functor1<int> & functor,
-                                                         const int arg)
+  const Functor1<int> & functor,
+  const int arg)
 {
   if (pwm_index < 0)
   {
@@ -766,8 +766,8 @@ void HighPowerSwitchController::stopAllPwm()
 }
 
 void HighPowerSwitchController::addEventUsingDelay(const Functor1<int> & functor,
-                                                   const uint32_t delay,
-                                                   const int arg)
+  const uint32_t delay,
+  const int arg)
 {
   if (event_controller_.eventsAvailable() == 0)
   {
@@ -832,15 +832,15 @@ void HighPowerSwitchController::removeParentAndChildrenPwmInfo(const int pwm_ind
 long HighPowerSwitchController::powerToAnalogWriteValue(const long power)
 {
   long pwm_value = map(power,
-                       constants::power_min,
-                       constants::power_max,
-                       constants::channel_pwm_min,
-                       constants::channel_pwm_max);
+    constants::power_min,
+    constants::power_max,
+    constants::channel_pwm_min,
+    constants::channel_pwm_max);
   long analog_write_value = map(pwm_value,
-                                constants::channel_pwm_min,
-                                constants::channel_pwm_max,
-                                constants::analog_write_min,
-                                constants::analog_write_max);
+    constants::channel_pwm_min,
+    constants::channel_pwm_max,
+    constants::analog_write_min,
+    constants::analog_write_max);
   return analog_write_value;
 }
 
@@ -1371,7 +1371,7 @@ void HighPowerSwitchController::getPwmInfoHandler()
 {
   noInterrupts();
   IndexedContainer<constants::PwmInfo,
-                   constants::INDEXED_PWM_COUNT_MAX> indexed_pwm = indexed_pwm_;
+    constants::INDEXED_PWM_COUNT_MAX> indexed_pwm = indexed_pwm_;
   interrupts();
 
   uint32_t bit = 1;
@@ -1439,11 +1439,11 @@ void HighPowerSwitchController::startRecursivePwmHandler(int pwm_index)
     long period = indexed_pwm_[child_index].period;
     long on_duration = indexed_pwm_[child_index].on_duration;
     EventIdPair event_id_pair = event_controller_.addInfinitePwmUsingDelay(makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startRecursivePwmHandler),
-                                                                           makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopRecursivePwmHandler),
-                                                                           delay,
-                                                                           period,
-                                                                           on_duration,
-                                                                           child_index);
+      makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopRecursivePwmHandler),
+      delay,
+      period,
+      on_duration,
+      child_index);
     event_controller_.addStartFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::startPwmHandler));
     event_controller_.addStopFunctor(event_id_pair,makeFunctor((Functor1<int> *)0,*this,&HighPowerSwitchController::stopPwmHandler));
     indexed_pwm_[child_index].event_id_pair = event_id_pair;
