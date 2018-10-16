@@ -64,7 +64,7 @@ void HighPowerSwitchController::setup()
   modular_server::Property & power_max_property = modular_server_.createProperty(constants::power_max_property_name,constants::power_max_default);
   power_max_property.setRange(constants::power_min,constants::power_max);
   power_max_property.setUnits(constants::percent_units);
-  power_max_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<const size_t> *)0,*this,&HighPowerSwitchController::setPowerMaxHandler));
+  power_max_property.attachPostSetElementValueFunctor(makeFunctor((Functor1<size_t> *)0,*this,&HighPowerSwitchController::setPowerMaxHandler));
 
   setPowersToMax();
 
@@ -307,8 +307,8 @@ bool HighPowerSwitchController::enabled()
   return enabled_;
 }
 
-long HighPowerSwitchController::setPowerWhenOn(const size_t channel,
-  const long power)
+long HighPowerSwitchController::setPowerWhenOn(size_t channel,
+  long power)
 {
   long power_to_set = 0;
   if (channel < constants::CHANNEL_COUNT)
@@ -336,7 +336,7 @@ long HighPowerSwitchController::setPowerWhenOn(const size_t channel,
   return power_to_set;
 }
 
-long HighPowerSwitchController::getPowerWhenOn(const size_t channel)
+long HighPowerSwitchController::getPowerWhenOn(size_t channel)
 {
   long power = constants::power_min;
   if (channel < constants::CHANNEL_COUNT)
@@ -348,7 +348,7 @@ long HighPowerSwitchController::getPowerWhenOn(const size_t channel)
   return power;
 }
 
-long HighPowerSwitchController::getPower(const size_t channel)
+long HighPowerSwitchController::getPower(size_t channel)
 {
   long power = constants::power_min;
   if (channel < constants::CHANNEL_COUNT)
@@ -360,7 +360,7 @@ long HighPowerSwitchController::getPower(const size_t channel)
   return power;
 }
 
-void HighPowerSwitchController::setChannels(const uint32_t channels)
+void HighPowerSwitchController::setChannels(uint32_t channels)
 {
   uint32_t bit = 1;
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
@@ -376,7 +376,7 @@ void HighPowerSwitchController::setChannels(const uint32_t channels)
   }
 }
 
-void HighPowerSwitchController::setChannelOn(const size_t channel)
+void HighPowerSwitchController::setChannelOn(size_t channel)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -401,8 +401,8 @@ void HighPowerSwitchController::setChannelOn(const size_t channel)
   }
 }
 
-void HighPowerSwitchController::setChannelOnAtPower(const size_t channel,
-  const long power)
+void HighPowerSwitchController::setChannelOnAtPower(size_t channel,
+  long power)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -424,7 +424,7 @@ void HighPowerSwitchController::setChannelOnAtPower(const size_t channel,
   }
 }
 
-void HighPowerSwitchController::setChannelOff(const size_t channel)
+void HighPowerSwitchController::setChannelOff(size_t channel)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -439,7 +439,7 @@ void HighPowerSwitchController::setChannelOff(const size_t channel)
   }
 }
 
-void HighPowerSwitchController::setChannelsOn(const uint32_t channels)
+void HighPowerSwitchController::setChannelsOn(uint32_t channels)
 {
   uint32_t bit = 1;
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
@@ -451,8 +451,8 @@ void HighPowerSwitchController::setChannelsOn(const uint32_t channels)
   }
 }
 
-void HighPowerSwitchController::setChannelsOnAtPower(const uint32_t channels,
-  const long power)
+void HighPowerSwitchController::setChannelsOnAtPower(uint32_t channels,
+  long power)
 {
   uint32_t bit = 1;
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
@@ -464,7 +464,7 @@ void HighPowerSwitchController::setChannelsOnAtPower(const uint32_t channels,
   }
 }
 
-void HighPowerSwitchController::setChannelsOff(const uint32_t channels)
+void HighPowerSwitchController::setChannelsOff(uint32_t channels)
 {
   uint32_t bit = 1;
   for (size_t channel=0; channel<constants::CHANNEL_COUNT; ++channel)
@@ -476,7 +476,7 @@ void HighPowerSwitchController::setChannelsOff(const uint32_t channels)
   }
 }
 
-void HighPowerSwitchController::toggleChannel(const size_t channel)
+void HighPowerSwitchController::toggleChannel(size_t channel)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -497,7 +497,7 @@ void HighPowerSwitchController::toggleChannel(const size_t channel)
   }
 }
 
-void HighPowerSwitchController::toggleChannels(const uint32_t channels)
+void HighPowerSwitchController::toggleChannels(uint32_t channels)
 {
   noInterrupts();
   channels_ ^= channels;
@@ -529,7 +529,7 @@ void HighPowerSwitchController::setAllChannelsOff()
   }
 }
 
-void HighPowerSwitchController::setChannelOnAllOthersOff(const size_t channel)
+void HighPowerSwitchController::setChannelOnAllOthersOff(size_t channel)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -542,7 +542,7 @@ void HighPowerSwitchController::setChannelOnAllOthersOff(const size_t channel)
   }
 }
 
-void HighPowerSwitchController::setChannelOffAllOthersOn(const size_t channel)
+void HighPowerSwitchController::setChannelOffAllOthersOn(size_t channel)
 {
   if (channel < constants::CHANNEL_COUNT)
   {
@@ -555,7 +555,7 @@ void HighPowerSwitchController::setChannelOffAllOthersOn(const size_t channel)
   }
 }
 
-void HighPowerSwitchController::setChannelsOnAllOthersOff(const uint32_t channels)
+void HighPowerSwitchController::setChannelsOnAllOthersOff(uint32_t channels)
 {
   noInterrupts();
   channels_ = channels;
@@ -563,7 +563,7 @@ void HighPowerSwitchController::setChannelsOnAllOthersOff(const uint32_t channel
   setChannels(channels_);
 }
 
-void HighPowerSwitchController::setChannelsOffAllOthersOn(const uint32_t channels)
+void HighPowerSwitchController::setChannelsOffAllOthersOn(uint32_t channels)
 {
   noInterrupts();
   channels_ = ~channels;
@@ -571,7 +571,7 @@ void HighPowerSwitchController::setChannelsOffAllOthersOn(const uint32_t channel
   setChannels(channels_);
 }
 
-bool HighPowerSwitchController::channelIsOn(const size_t channel)
+bool HighPowerSwitchController::channelIsOn(size_t channel)
 {
   bool channel_is_on = false;
   if (channel < constants::CHANNEL_COUNT)
@@ -598,11 +598,11 @@ size_t HighPowerSwitchController::getChannelCount()
   return constants::CHANNEL_COUNT;
 }
 
-int HighPowerSwitchController::addPwm(const uint32_t channels,
-  const long delay,
-  const long period,
-  const long on_duration,
-  const long count)
+int HighPowerSwitchController::addPwm(uint32_t channels,
+  long delay,
+  long period,
+  long on_duration,
+  long count)
 {
   if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
   {
@@ -636,19 +636,19 @@ int HighPowerSwitchController::addPwm(const uint32_t channels,
   return pwm_index;
 }
 
-int HighPowerSwitchController::startPwm(const uint32_t channels,
-  const long delay,
-  const long period,
-  const long on_duration)
+int HighPowerSwitchController::startPwm(uint32_t channels,
+  long delay,
+  long period,
+  long on_duration)
 {
   return addPwm(channels,delay,period,on_duration,-1);
 }
 
-int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
-  const long delay,
+int HighPowerSwitchController::addRecursivePwm(uint32_t channels,
+  long delay,
   RecursivePwmValues periods,
   RecursivePwmValues on_durations,
-  const long count)
+  long count)
 {
   if (indexed_pwm_.full() || (event_controller_.eventsAvailable() < 2))
   {
@@ -713,17 +713,17 @@ int HighPowerSwitchController::addRecursivePwm(const uint32_t channels,
   return pwm_index;
 }
 
-int HighPowerSwitchController::startRecursivePwm(const uint32_t channels,
-  const long delay,
+int HighPowerSwitchController::startRecursivePwm(uint32_t channels,
+  long delay,
   RecursivePwmValues periods,
   RecursivePwmValues on_durations)
 {
   return addRecursivePwm(channels,delay,periods,on_durations,-1);
 }
 
-void HighPowerSwitchController::addCountCompletedFunctor(const int pwm_index,
+void HighPowerSwitchController::addCountCompletedFunctor(int pwm_index,
   const Functor1<int> & functor,
-  const int arg)
+  int arg)
 {
   if (pwm_index < 0)
   {
@@ -737,7 +737,7 @@ void HighPowerSwitchController::addCountCompletedFunctor(const int pwm_index,
   }
 }
 
-void HighPowerSwitchController::stopPwm(const int pwm_index)
+void HighPowerSwitchController::stopPwm(int pwm_index)
 {
   if (pwm_index < 0)
   {
@@ -766,8 +766,8 @@ void HighPowerSwitchController::stopAllPwm()
 }
 
 void HighPowerSwitchController::addEventUsingDelay(const Functor1<int> & functor,
-  const uint32_t delay,
-  const int arg)
+  uint32_t delay,
+  int arg)
 {
   if (event_controller_.eventsAvailable() == 0)
   {
@@ -817,7 +817,7 @@ HighPowerSwitchController::RecursivePwmValues HighPowerSwitchController::arrayTo
   return pwm_values;
 }
 
-void HighPowerSwitchController::removeParentAndChildrenPwmInfo(const int pwm_index)
+void HighPowerSwitchController::removeParentAndChildrenPwmInfo(int pwm_index)
 {
   if (pwm_index >= 0)
   {
@@ -829,7 +829,7 @@ void HighPowerSwitchController::removeParentAndChildrenPwmInfo(const int pwm_ind
   }
 }
 
-long HighPowerSwitchController::powerToAnalogWriteValue(const long power)
+long HighPowerSwitchController::powerToAnalogWriteValue(long power)
 {
   long pwm_value = map(power,
     constants::power_min,
@@ -857,7 +857,7 @@ void HighPowerSwitchController::setPowersToMax()
   }
 }
 
-void HighPowerSwitchController::updateChannel(const size_t channel)
+void HighPowerSwitchController::updateChannel(size_t channel)
 {
   uint32_t bit = 1;
   bit = bit << channel;
@@ -891,7 +891,9 @@ void HighPowerSwitchController::initializePwmIndexes()
   interrupts();
 }
 
-void HighPowerSwitchController::setChannelPwmIndexesRunning(size_t channel, size_t level, int pwm_index)
+void HighPowerSwitchController::setChannelPwmIndexesRunning(size_t channel,
+  size_t level,
+  int pwm_index)
 {
   if ((channel < constants::CHANNEL_COUNT) && (level < constants::PWM_LEVEL_COUNT_MAX))
   {
@@ -901,7 +903,9 @@ void HighPowerSwitchController::setChannelPwmIndexesRunning(size_t channel, size
   }
 }
 
-void HighPowerSwitchController::setChannelsPwmIndexesRunning(uint32_t channels, size_t level, int pwm_index)
+void HighPowerSwitchController::setChannelsPwmIndexesRunning(uint32_t channels,
+  size_t level,
+  int pwm_index)
 {
   if (level < constants::PWM_LEVEL_COUNT_MAX)
   {
@@ -918,7 +922,8 @@ void HighPowerSwitchController::setChannelsPwmIndexesRunning(uint32_t channels, 
   }
 }
 
-void HighPowerSwitchController::setChannelPwmIndexesStopped(size_t channel, size_t level)
+void HighPowerSwitchController::setChannelPwmIndexesStopped(size_t channel,
+  size_t level)
 {
   if ((channel < constants::CHANNEL_COUNT) && (level < constants::PWM_LEVEL_COUNT_MAX))
   {
@@ -928,7 +933,8 @@ void HighPowerSwitchController::setChannelPwmIndexesStopped(size_t channel, size
   }
 }
 
-void HighPowerSwitchController::setChannelsPwmIndexesStopped(uint32_t channels, size_t level)
+void HighPowerSwitchController::setChannelsPwmIndexesStopped(uint32_t channels,
+  size_t level)
 {
   if (level < constants::PWM_LEVEL_COUNT_MAX)
   {
@@ -1016,7 +1022,7 @@ void HighPowerSwitchController::stopPwmHandler(int pwm_index)
   }
 }
 
-void HighPowerSwitchController::setPowerMaxHandler(const size_t channel)
+void HighPowerSwitchController::setPowerMaxHandler(size_t channel)
 {
   modular_server::Property & power_max_property = modular_server_.property(constants::power_max_property_name);
   long power_max;
