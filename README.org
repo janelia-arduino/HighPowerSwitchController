@@ -4,7 +4,7 @@
 
 * Library Information
   - Name :: HighPowerSwitchController
-  - Version :: 1.0.4
+  - Version :: 2.0.0
   - License :: BSD
   - URL :: https://github.com/janelia-arduino/HighPowerSwitchController
   - Author :: Peter Polidoro

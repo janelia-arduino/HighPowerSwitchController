@@ -97,8 +97,8 @@ public:
   typedef Array<RecursivePwmValues,high_power_switch_controller::constants::CHANNEL_COUNT> ChannelsPwmIndexes;
   ChannelsPwmIndexes getChannelsPwmIndexes();
 
-  uint32_t arrayToChannels(ArduinoJson::JsonArray & channels_array);
-  RecursivePwmValues arrayToRecursivePwmValues(ArduinoJson::JsonArray & array);
+  uint32_t arrayToChannels(ArduinoJson::JsonArray channels_array);
+  RecursivePwmValues arrayToRecursivePwmValues(ArduinoJson::JsonArray array);
 
   // Handlers
   virtual void startPwmHandler(int pwm_index);

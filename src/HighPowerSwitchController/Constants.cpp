@@ -19,9 +19,9 @@ CONSTANT_STRING(firmware_name,"HighPowerSwitchController");
 const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=1,
+  .version_major=2,
   .version_minor=0,
-  .version_patch=4,
+  .version_patch=0,
 };
 
 CONSTANT_STRING(hardware_name,"high_power_switch_controller");
