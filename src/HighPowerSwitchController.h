@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef HIGH_POWER_SWITCH_CONTROLLER_H
 #define HIGH_POWER_SWITCH_CONTROLLER_H
